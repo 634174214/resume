@@ -257,6 +257,13 @@ var webALLWorks = [
         'qrclickShow': false,
         'data': [
             {
+                // 未在mywork上部署
+                'src': webWorksPath + 'vue-xinps.jpg',
+                'qr': webWorksPath + 'vue-xinps-qr.png',
+                'name': '信网创图在线设计系统',
+                'href': 'https://vip.qdxin.cn/vip/anli/pro/xin-ps/'
+            },
+            {
                 'src': webWorksPath + 'vue-music.jpg',
                 'qr': webWorksPath + 'vue-music-qr.png',
                 'name': 'Vue制作炸鸡音乐（自制）',

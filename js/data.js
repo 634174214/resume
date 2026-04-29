@@ -195,11 +195,17 @@ var webBetter = [
                 'name': '炸鸡音乐WebAPP',
                 'href': 'http://my.wubin.work/works/qqmusic-vue3/html/'
             },
+            // {
+            //     'src': webBetterPath + '4-qdlib.jpg',
+            //     'qr': webBetterPath + '4-qdlib-qr.png',
+            //     'name': '信网资源-全栈vue开发',
+            //     'href': 'http://qd.wubin.work/'
+            // },
             {
-                'src': webBetterPath + '4-qdlib.jpg',
-                'qr': webBetterPath + '4-qdlib-qr.png',
-                'name': '信网资源-全栈vue开发',
-                'href': 'http://qd.wubin.work/'
+                'src': webBetterPath + '4-mylawai.jpg',
+                'qr': webBetterPath + '4-mylawai-qr.png',
+                'name': '信法网AI调解员',
+                'href': 'http://my.wubin.work/works/xin-law-ai/'
             },
             {
                 'src': webBetterPath + '4-yiqing.jpg',
@@ -256,6 +262,24 @@ var webALLWorks = [
         'label': 'VUE案例',
         'qrclickShow': false,
         'data': [
+            {
+                'src': webWorksPath + 'vue-aifabao.jpg',
+                'qr': webWorksPath + 'vue-aifabao-qr.png',
+                'name': '信网AI智案法宝(正式地址)',
+                'href': 'https://law.qdxin.cn/pro/'
+            },
+            {
+                'src': webWorksPath + 'vue-article-check.jpg',
+                'qr': webWorksPath + 'vue-article-check-qr.png',
+                'name': '信网AI校稿助手(本地)',
+                'href': 'http://my.wubin.work/works/article-check/'
+            },
+            {
+                'src': webWorksPath + 'vue-lawai.jpg',
+                'qr': webWorksPath + 'vue-lawai-qr.png',
+                'name': '信法网AI调解员(正式地址)',
+                'href': 'https://law.qdxin.cn/ai/'
+            },
             {
                 // 未在mywork上部署
                 'src': webWorksPath + 'vue-xinps.jpg',
@@ -838,6 +862,17 @@ var webALLWorks = [
 // 设计作品
 var designPath = 'images/design/';
 var designWorks = [
+    {
+        'label':   '少儿科技节海报',
+        'desc':    '青岛格兰德小学第五届科技节海报',
+        'show': designPath + 'grang-keji-h-1.jpg',
+        'images':  [
+            {
+                'src': designPath + 'grang-keji-h-1.jpg',
+                'isvertical' : true
+            }
+        ]
+    },
 {
     'label':   '信号新闻app介绍',
     'desc':    '信号新闻app引导介绍下载页面的PC版和手机版',

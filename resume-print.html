@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>武彬 - WEB全栈工程师</title>
+    <style>
+        /* 重置所有边距 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        img{
+            display: block;
+            width: 100%;
+        }
+        /* 屏幕显示环境 */
+        body {
+            background: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            padding: 30px 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .page {
+            background: #fff;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 8mm 10mm; 
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            border-radius: 4px;
+        }
+
+        /* ------- 打印核心样式 ------- */
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+                margin: 0;
+            }
+            .page {
+                box-shadow: none;
+                border-radius: 0;
+                width: 100%;
+                min-height: 100vh;
+                padding: 6mm 8mm; /* 牺牲一点点边距换大字 */
+            }
+            @page {
+                margin: 0;
+            }
+        }
+
+        /* ------- 布局组件 ------- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+        }
+        .header h1 {
+            font-size: 36px;
+            font-weight: 600;
+            color: #2c3e50;
+            letter-spacing: 2px;
+            margin: 0;
+            line-height: 1;
+        }
+        .header .sub-title {
+            font-size: 16px;
+            color: #666;
+            margin-top: 6px;
+        }
+        .header .contact {
+            text-align: right;
+            font-size: 13px; /* 联系方式略小一点，不影响简历核心展示 */
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .summary {
+            font-size: 16px;
+            line-height: 30px;
+            color: #444;
+            background: #f8f9fa;
+            padding: 8px 14px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            border-left: 4px solid #e8604c;
+        }
+
+        .main-grid {
+            display: flex;
+            gap: 18px;
+        }
+        .left-col {
+             flex: 1;
+        }
+        .right-col {
+            flex: 3.5;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-top: 12px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #eaeaea;
+            padding-bottom: 3px;
+        }
+
+        /* 技能标签 */
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        .skill-tag {
+            background: #f0f2f5;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 14px; /* 标签稍微缩小1px保证换行美观 */
+            color: #333;
+            margin-bottom: 6px;
+        }
+        .skill-tag.strong {
+            background: #e8604c;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        /* 信息列表 */
+        .info-list {
+            list-style: none;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #444;
+        }
+        .info-list li {
+            margin-bottom: 1px;
+        }
+
+        /* 更多信息区（含二维码优化） */
+        .more-info {
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .more-info dt {
+            color: #b4b4b4;
+            margin-top: 4px;
+        }
+        .more-info dd {
+            margin-left: 0;
+            color: #444;
+        }
+        .more-info dd img {
+            display: block;
+            width: 100px;
+            height: 100px;
+            margin-top: 4px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+        .wechat-tip {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+            margin-bottom: 8px;
+            display: none;
+        }
+
+        /* 工作经历 */
+        .job-item {
+            margin-bottom: 13px;
+        }
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 18px;
+            color: #222;
+        }
+        .job-header .company {
+            color: #e8604c;
+        }
+        .job-header .time {
+            font-weight: 400;
+            font-size: 14px;
+            color: #777;
+        }
+        .job-do {
+            font-size: 16px;
+            color: #666;
+            padding: 5px 0 6px 0;
+        }
+        .job-desc {
+            font-size: 16px;
+            line-height: 30px;
+            color: #444;
+            margin-top: 3px;
+            list-style: none;
+            padding-left: 0;
+        }
+        .job-desc li {
+            position: relative;
+            padding-left: 16px;
+            margin-bottom: 2px;
+        }
+        .job-desc li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #e8604c;
+        }
+        .main-color{
+            color: #e8604c;
+        }
+
+        /* --- 教育经历表格：带边框 + 灰色底 --- */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse; /* 合并双线为单线，更干净 */
+            font-size: 16px;
+            margin-top: 6px;
+            border: 1px solid #ccc; /* 表格最外层黑框 */
+        }
+        
+        .info-table th,
+        .info-table td {
+            border: 1px solid #ccc; /* 所有单元格边框 */
+            padding: 8px 10px;      /* 单元格内部留白，防止字挨着框 */
+            text-align: left;       /* 内容左对齐 */
+        }
+
+        .info-table th {
+            background: #f2f2f2;    /* 表头浅灰色底 */
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #bbb; /* 表头下边框稍微加粗一点，区分表头 */
+        }
+
+        .qr-code-box{
+            width: 100%;
+            display: flex;
+            gap: 20px;
+            justify-content: flex-start;
+            padding-top: 25px;
+        }
+        .qr-item{
+            flex: 0 0 100px;
+        }
+        .qr-item p{
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            padding-top: 5px;
+        }
+        .tips{
+            font-size: 15px;
+            margin-top: 10px;
+        }
+
+        /* 移动端适配 */
+        @media screen and (max-width: 800px) {
+            body { padding: 0; }
+            .page { width: 100%; min-height: auto; border-radius: 0; padding: 15px; }
+            .main-grid { flex-direction: column; gap: 10px; }
+            .left-col, .right-col { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <!-- 头部 -->
+        <div class="header">
+            <div>
+                <h1>武彬</h1>
+                <div class="sub-title">WEB全栈工程师 / 设计师</div>
+            </div>
+            <div class="contact">
+                电话：<strong class="main-color">150 6397 3659</strong><br>
+                邮箱：bin3656@aliyun.com<br>
+                微信：w15063973659<br>
+                主页：<strong>https://634174214.github.io</strong>
+            </div>
+        </div>
+
+        <!-- 总结 -->
+        <div class="summary">
+            <b><span id="has-worked-year"></span>年全栈开发与设计经验。</b>具备从 UI/UX 设计到前后端及多端开发的全栈闭环能力，可独立完成复杂产品从 0 到 1 的落地。深入 Dify 大模型应用编排，探索 AI 在行业的实际落地。持有<b>信息系统项目管理师</b>证书，擅用敏捷统筹项目进度与风险。
+        </div>
+
+        <div class="main-grid">
+            <!-- 左侧：技能/证书/联系 -->
+            <div class="left-col">
+                <div class="section-title">专业技能</div>
+                <div class="skill-tags">
+                    <span class="skill-tag strong">PHP</span>
+                    <span class="skill-tag strong">MySQL</span>
+                    <span class="skill-tag strong">JS/ES6+</span>
+                    <span class="skill-tag strong">Vue</span>
+                    <span class="skill-tag strong">Uni-app</span>
+                    <span class="skill-tag">ThinkPHP</span>
+                    <span class="skill-tag">TypeScript</span>
+                    <span class="skill-tag">MongoDB</span>
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">Dify</span>
+                    <span class="skill-tag">HTML/CSS</span>
+                    <span class="skill-tag strong">Photoshop</span>
+                    <span class="skill-tag">Figma</span>
+                    <span class="skill-tag">InDesign</span>
+                </div>
+
+                <div class="section-title">证书</div>
+                <ul class="info-list">
+                    <li><b>信息系统项目管理师</b> (高项)</li>
+                    <li>工商管理学士学位</li>
+                    <li>网络管理工程师</li>
+                    <li>系统维护师</li>
+                    <li>机动车驾照C级</li>
+                </ul>
+
+                <div class="section-title">更多信息</div>
+                <dl class="more-info">
+                    <dt>个人博客</dt>
+                    <dd>https://634174214.github.io</dd>
+                    <dt>作品集</dt>
+                    <dd>https://634174214.github.io/portfolio/</dd>
+                    <dt>在线简历</dt>
+                    <dd>https://634174214.github.io/resume/</dd>
+                </dl>
+                <div class="qr-code-box">
+                    <div class="qr-item">
+                        <div class="imgbox">
+                            <img src="img/mywx-qrcode.png" alt="微信二维码">
+                        </div>
+                        <p>微信二维码</p>
+                    </div>
+                    <div class="qr-item">
+                        <div class="imgbox" id="resume-qrcode">
+                            
+                        </div>
+                        <p>在线简历二维码</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：工作经历 -->
+            <div class="right-col">
+                <div class="section-title">工作经历</div>
+                
+                <div class="job-item">
+                    <div class="job-header">
+                        <span class="company">青岛信网</span>
+                        <span class="time">2016.02 - 至今</span>
+                    </div>
+                    <div class="job-do">WEB全栈工程师</div>
+                    <ul class="job-desc">
+                        <li><b>全栈系统建设：</b>独立负责信网PC端、移动端架构设计与开发；从0到1搭建专题制作发布、卡片海报合成、图库管理系统。</li>
+                        <li><b>多端产品交付：</b>基于 <b>Vue + Uni-app</b> 独立完成“信号新闻”APP、信网小程序、辟谣青岛小程序等多端产品的研发与上线。</li>
+                        <li><b>AI应用落地：</b>基于<strong>Dify</strong>完成信网智绘、稿件审校等多个AI智能体；开发青岛市网调委AI调解员、AI智案法宝等多个生成式AI交互的智能应用。</li>
+                    </ul>
+                </div>
+
+                <div class="job-item">
+                    <div class="job-header">
+                        <span class="company">新浪青岛</span>
+                        <span class="time">2014.10 - 2016.02</span>
+                    </div>
+                    <div class="job-do">网页设计 / 前端开发</div>
+                    <ul class="job-desc">
+                        <li>负责新闻专题、频道页面的创意设计及前端开发；配合市场部完成 H5 活动页面及线下展会物料设计。</li>
+                    </ul>
+                </div>
+
+                <div class="job-item">
+                    <div class="job-header">
+                        <span class="company">青岛绮光溢彩文化传播有限公司</span>
+                        <span class="time">2009.03 - 2014.10</span>
+                    </div>
+                    <div class="job-do">平面设计师</div>
+                    <ul class="job-desc">
+                        <li>负责西门子、日立医疗展会平面资料与DM设计；完成古早文化城VI视觉系统及画册设计制作。</li>
+                    </ul>
+                </div>
+
+                <div class="section-title">教育经历</div>
+                <table class="info-table">
+                    <thead>
+                        <tr>
+                            <th>学校</th>
+                            <th>学历</th>
+                            <th>专业</th>
+                            <th>时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>山东水利职业学院</td>
+                            <td>大专</td>
+                            <td>计算机应用技术</td>
+                            <td>2006 - 2009</td>
+                        </tr>
+                        <tr>
+                            <td><b>中国海洋大学</b></td>
+                            <td>本科</td>
+                            <td>工商管理</td>
+                            <td>2010 - 2013</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="tips">
+                    <strong class="main-color">*注：</strong><strong>中国海洋大学</strong>本科学历，属 <strong>继续教育（非全日制）。</strong> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="lib/qrcode.min.js"></script>
+    <script>
+        new QRCode(document.getElementById('resume-qrcode'), {
+            text: 'https://634174214.github.io/resume/',
+            width: 100,
+            height: 100
+        });
+        const start = 2011;
+        const nowYear = new Date().getFullYear();
+        document.getElementById('has-worked-year').innerHTML = nowYear - start;
+    </script>
+</body>
+</html>

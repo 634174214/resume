@@ -25,142 +25,39 @@ var initPage = {
             var left = Math.floor(el.offset().left),
                 top = Math.floor(el.offset().top);
             $('#erwe-wrapper').css({
-                'left': left + 180,
+                'left': left + 135,
                 // 由于添加css动画导致top值计算错误 这里使用固定值
                 'top': 187
             });
         }
     },
-    // 向skill-ul中插入li
-    addSkillItem: function() {
-        // 定义结构模板
-        var template = function(label, color) {
-            return $('<li class="item"><div class="label" style="color: ' + color +';">' + label +'</div><span class="progress" style="background-color: ' + color + ';"></span><span class="percent"></span></li>');
-        };
-        $.each(skillCode, function(index) {
-            var $li = template(skillCode[index].label, skillCode[index].color);
-            $('#skill-code').append($li);
-        });
-        $.each(skillDesign, function(index) {
-            var $li = template(skillDesign[index].label, skillDesign[index].color);
-            $('#skill-design').append($li);
-        });
-    },
-    // 前端全部项目向其中插入dom结构 每4个去除margin-left
-    setAllWorksItem: function() {
-        // ul外部的结构
-        var templateWrap = function(label, inhtml, qrboxshow) {
-            // 如果二维码不需要开始就显示 做一个字段判断 专门为小程序展示特定的
-            var qrshow = qrboxshow ? 'qrshow' : '';
-            return '<aside class="row"><h4 class="works-headline">' + label + '</h4><ul class="works-list ' + qrshow + '">' + inhtml + '</ul></aside>'
-        };
-        // li的结构
-        var templateInner = function(opt, nomargLeft) {
-            return '<li class="' + nomargLeft + '"><a href="' + opt.href +'" target="_blank" class="linkto"><div class="imgbox"><img src="' + opt.src + '" class="allwork-pic"><em class="QRcode"><cite class="work-qr"><img src="' + opt.qr + '"></cite><cite class="text">扫码 / 点击 查看详情</cite></em></div><p class="name">' + opt.name + '</p></a></li>'
-        };
-        var $worksInner = $('#all-webworks-inner');
-        // 全部结构字符串
-        var allHtml = '';
-        $.each(webALLWorks, function(index, workItem) {
-            var _innerHtml = '';
-            $.each(workItem.data, function(j, item) {
-                var hasnoLeft = '';
-                if ( j % 4 === 0) {
-                    hasnoLeft = 'nomargLeft';
-                }
-                // 构建每个data中的字符串
-                _innerHtml = _innerHtml + templateInner(item, hasnoLeft);
+    // 渲染技能卡片（替代原来的进度条）
+    renderSkillCards: function() {
+        var $grid = $('#skill-grid');
+        // 如果不存在 skill-grid，直接返回
+        if(!$grid.length) {
+            return;
+        }
+        var html = '';
+        
+        $.each(skills, function(key, category) {
+            var icon = category['icon'];
+            var itemsHtml = '';
+            $.each(category.items, function(i, item) {
+                itemsHtml += '<span class="skill-tag">' + item + '</span>';
             });
-            // 构建包含外部aside的字符串
-            allHtml = allHtml + templateWrap(workItem.label, _innerHtml, workItem.qrclickShow);
+            html += '<div class="skill-card">';
+            html += '  <div class="skill-card-header">';
+            html += '    <span class="skill-icon">' + icon + '</span>';
+            html += '    <h4>' + category.name + '</h4>';
+            html += '  </div>';
+            html += '  <div class="skill-card-body">' + itemsHtml + '</div>';
+            html += '</div>';
         });
-        // 将整体插入
-        $worksInner.append($(allHtml));
-        // 点击展开/折叠下方的List
-        var $heads = $worksInner.find('.works-headline');
-        $heads.on('click', function() {
-            var $nextList = $(this).next();
-            var isFold = $(this).hasClass('fold');
-            if(isFold) {
-                $nextList.slideDown();
-                $(this).removeClass('fold');
-            } else {
-                $nextList.slideUp();
-                $(this).addClass('fold');
-            }
-        });
+        
+        $grid.html(html);
     }
 } 
-// 生成一个随机的区间整数值
-var getRandomNum = function(min, max) {
-    var num = parseInt(Math.random() * (max - min) + min);
-    return num;
-};
-
-
-// 技能条增长动画执行
-$.fn.barGrow = function(options) {
-    var config = $.extend({
-        speed: 2000,   // 动画执行时间
-        maxWidth: 300, // 最长
-        percent: 100   // 变化的百分比值
-    }, options);
-    var $progress = $('.progress', this);
-    var $percent = $('.percent', this);
-    var progressWidth = Math.floor(config.maxWidth * (config.percent / 100));
-    $progress.animate(
-        {
-            // 动画变化的属性
-            width: progressWidth
-        },
-        {
-            // 动画的持续时间
-            duration: config.speed,
-            // 记录动画进度没完成一次返回一个值
-            step: function(currentWidth) {
-                var nowPercent = Math.ceil(currentWidth / config.maxWidth * 100);
-                // isNaN检测值是否是数值
-                if(isNaN(nowPercent)) {
-                    nowPercent = 0;
-                }
-                $percent[0].innerHTML = nowPercent + '%';
-            }
-        }
-    );
-};
-// 执行技能值增长的动画
-var skillBarGrow = function(ispc) {
-    var $codeItems = $('.item', '#skill-code');
-    var $designItems = $('.item', '#skill-design');
-    var progressMaxWidth = ispc ? 315 : (function() {
-        var itemWidth = $codeItems.eq(0).width();
-        // 标签名：HTML与百分比的宽度是70与50在手机版上 这里直接计算就好，注意结尾要加()直接执行函数
-        var retWidth = itemWidth - 70 - 50;
-        return retWidth;
-    })();
-    this.codeGrow = function() {
-        $codeItems.each(function(index, codeitem) {
-            // 生成执行1000ms-2000ms随机时间
-            var durationTime = getRandomNum(1000, 2000);
-            $(codeitem).barGrow({
-                speed: durationTime,
-                maxWidth: progressMaxWidth,
-                percent: skillCode[index].percent
-            });
-        });
-    }
-    this.designGrow = function() {
-        $designItems.each(function(index, designitem) {
-            // 生成执行随机时间
-            var durationTime = getRandomNum(1000, 2000);
-            $(designitem).barGrow({
-                speed: durationTime,
-                maxWidth: progressMaxWidth,
-                percent: skillDesign[index].percent
-            });
-        });
-    }
-}
 
 // 获取每一个section的高度
 var getSectionsTop = function(arr, scrollOffset, ispc) {
@@ -168,7 +65,12 @@ var getSectionsTop = function(arr, scrollOffset, ispc) {
     // 根据是否是pc做不同调整
     var litescroll = ispc ? 150 : 500;
     $.each(arr, function(index, item) {
-        var itemTop = Math.ceil($(item).offset().top) + scrollOffset;
+        var $item = $(item);
+        if(!$item.length) {
+            ret.push(0);
+            return true;
+        }
+        var itemTop = Math.ceil($item.offset().top) + scrollOffset;
         // 对前端、设计作品的距离顶部距离单独做调整
         switch(true) {
             case index === 3:
@@ -224,6 +126,7 @@ var frontendMethods = function() {
         var contents = webBetter[0].data,
             qrclickShow = webBetter[0].qrclickShow;
         this.setSlide(contents, $slides, qrclickShow);
+
     }
     // 切换tabs选项卡
     this.tabsClick = function($this, swiper, ispc) {
@@ -237,6 +140,13 @@ var frontendMethods = function() {
         var contentval = contents.data,
             qrclickShow = contents.qrclickShow,
             contentKey = contents.label;
+        var $frontEndAllBtn = $('#front-end-all');
+        // 每次点击tab的时候 都更改下方查看全部的按钮
+        var scrollTo = $this.data('scrollto');
+        $frontEndAllBtn.attr(
+            'href', 
+            $frontEndAllBtn.attr('href') + '#' + scrollTo
+        );
         
         $this.siblings().removeAttr('class');
         $this.addClass('active');
@@ -303,11 +213,24 @@ var frontendMethods = function() {
     this.hrefStop = function(ispc) {
         // 当为小程序时候 点击阻止a标签跳转并显示二维码
         $('.hrefstop-hook').on('click', function() {
-            if (!ispc) {
-                var $qrbox = $(this).find('.QRcode');
-                $qrbox.fadeIn();
+            // 排除掉有链接的情况 让有链接的也能点击
+            var href = $(this).attr('href');
+            if(ispc) {
+                if(href.indexOf('javascript:;') > -1 ||
+                   !href    
+                ) {
+                    return false;
+                }
+            } else {
+                if(href.indexOf('javascript:;') > -1) {
+                    var $qrbox = $(this).find('.QRcode');
+                    $qrbox.fadeIn();
+                    return false;
+                } else {
+                    window.open(href);
+                }
             }
-            return false;
+            
         });
         $('.close').on('click', function() {
             $(this).parent().fadeOut();
@@ -349,7 +272,7 @@ frontendMethods.prototype = {
     template: function(opt, qrclickShow) {
         // 如果手机版点击出现二维码不跳转的情况 
         var hrefStopCls = qrclickShow ? 'hrefstop-hook' : '';
-        return '<a href="'+ opt.href + '" target="_blank" class="linkto ' + hrefStopCls + '"><dl class="detail"><dt class="imgbox"><img src="'+ opt.src + '" class="work-pic"><em class="QRcode"><cite class="work-qr"><img src="'+ opt.qr +'"></cite><cite class="text">扫码 / 点击 查看详情</cite><cite class="icon close"></cite></em></dt><dd class="name">'+ opt.name + '</dd></dl></a>';
+        return '<a href="'+ opt.href + '" target="_blank" class="linkto ' + hrefStopCls + '"><dl class="detail"><dt class="imgbox"><img src="'+ opt.src + '" class="work-pic"><em class="QRcode"><cite class="work-qr"><img src="' + opt.qr + '"></cite><cite class="text">扫码 / 点击 查看详情</cite><cite class="icon close"></cite></em></dt><dd class="name">'+ opt.name + '</dd></dl></a>';
     },
     // 设置slide中内容,仅用于pc版
     setSlide: function(contents, $slides, qrclickShow) {
@@ -357,6 +280,28 @@ frontendMethods.prototype = {
         $.each(contents, function(index, obj) {
             var item = _self.template(obj, qrclickShow);
             $slides.eq(index).append($(item));
+        });
+
+        setTimeout(function() {
+            _self.setQrByUrl();
+        }, 1000);
+    },
+    // 为每个链接动态设置二维码
+    setQrByUrl: function() {
+        var $slides = $('#Frontend-content').find('.swiper-slide');
+        $.each($slides, function(index, item) {
+            var $linkto = $(item).find('.linkto').eq(0);
+            var href = $linkto.attr('href');
+            var $workQr = $linkto.find('.work-qr').eq(0);
+            var $workQrImg = $workQr.find('img');
+            if($workQrImg && !$workQrImg.attr('src')) {
+                new QRCode($workQr[0], {
+                    text: href,
+                    width: 100,
+                    height: 100
+                });
+            }
+            
         });
     }
 }
@@ -379,7 +324,6 @@ var designWaterfall = function(screenHeight, ispc) {
             step = _self.loadStep;
         // 更改加载的起点，这里要先执行赋值，否则当最后阶段，会一直等于allLens
         _self.loadStart = start + step;
-        // console.log(start)
         if(start <= allLens) {
             if( (start + step) > allLens ) {
                 step = allLens - start;
@@ -438,8 +382,11 @@ var designWaterfall = function(screenHeight, ispc) {
     }
     this.checkscrollside = function(scrollTop) {
         var $aPin = $( "#gallery-wrapper>li" );
-        var lastPinH = $aPin.last().offset().top + Math.floor($aPin.last().height()/2);//创建【触发添加块框函数waterfall()】的高度：最后一个块框的距离网页顶部+自身高的一半(实现未滚到底就开始加载)
-        return (lastPinH < scrollTop + documentH ) ? true : false;//到达指定高度后 返回true，触发waterfall()函数
+        if(!$aPin.length) {
+            return false;
+        }
+        var lastPinH = $aPin.last().offset().top + Math.floor($aPin.last().height()/2);
+        return (lastPinH < scrollTop + documentH ) ? true : false;
     }
 };
 
@@ -498,7 +445,6 @@ var designWorksMethods = function(ispc) {
         designSwiper.reInit();
         // 配置为loop必须手动控制滚动到0页
         designSwiper.swipeTo(0, 0, false);
-        // console.log(designSwiper)
     }
     // 关闭
     $close.on('click', function() {
@@ -610,7 +556,7 @@ $(function() {
     // 导航当前的索引
     var navActiveIndex = 0;
     // 所有的主要块
-    var sections = ['#info', '#works', '#skill', '#Frontend', '#afterend', '#design'];
+    var sections = ['#info', '#works', '#skill', '#afterend', '#Frontend', '#design'];
     // 每个主要块距离页面顶部距离的数组
     var sectionsTop = getSectionsTop(sections, scrollOffset, isPc);
     // 菜单是否打开
@@ -624,11 +570,6 @@ $(function() {
     var navTop = $nav.offset().top;
     // nav-list每个li距离左边的距离
     var navListItemsLeft = getNavListItemsLeft($navLis);
-    // 获取skill到顶部的距离
-    var skillTop = {
-        code: $('#skill-code').offset().top,
-        design: $('#skill-design').offset().top
-    };
     var $bigImgwrap = $('#bigimg'),
         bigImg = $bigImgwrap.find('img').get(0);
     // 学历认证按钮
@@ -641,8 +582,7 @@ $(function() {
     var screenHeight = $(window).height();
     initPage.infoBgTurn();
     initPage.setErwePlace(isPc, $addwexin);
-    initPage.addSkillItem();
-    initPage.setAllWorksItem();
+    initPage.renderSkillCards();
     // info 微信项目 鼠标移动
     $addwexin.hover(
         function() {
@@ -697,16 +637,37 @@ $(function() {
         }
     );
     // 导航点击
+    // 导航点击（PC和手机统一使用锚点平滑滚动）
+    // 导航点击（PC和手机统一使用锚点平滑滚动）
     $navLis.on('click', function() {
         var index = $(this).index();
-        var left = navListItemsLeft[index];
-        var scrollTo = sectionsTop[index];
-        // pc 手机分别处理
-        var scrollY = scrollTo - scrollOffset;
-        // 因为使用滚动驱动active的样式赋值以及横线的移动，所以这里就不需要再给单独添加点击事件了，点击只需要驱动window滚动即可
-        // $(this).addClass('active').siblings('li').removeClass('active');
-        // $navline.css('transform', 'translate(' + left +'px,0)');
-        $('html,body').animate({scrollTop: scrollY});
+        var targetId = sections[index];
+        var targetEl = $(targetId);
+        var $that = $(this);
+
+        if(targetEl.length) {
+            // 1. 先切换菜单的 active 样式（视觉上立刻选中）
+            $navLis.removeClass('active');
+            $that.addClass('active');
+
+            // 2. 设置一个标记：告诉滚动监听器“现在正在手动跳转，不要捣乱”
+            window.isNavigating = true;
+
+            // 手机端关菜单逻辑
+            if(!isPc && navOpened) {
+                $('#navbtn').trigger('click');
+                setTimeout(function() {
+                    targetEl[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // 滚动结束后，等待 800ms 解锁监听器，恢复滚动跟随
+                    setTimeout(function() { window.isNavigating = false; }, 800);
+                }, 400);
+            } else {
+                // PC端直接跳
+                targetEl[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // 同样解锁
+                setTimeout(function() { window.isNavigating = false; }, 800);
+            }
+        }
     });
     // 手机菜单按钮点击
     $('#navbtn').on('click', function() {
@@ -748,8 +709,6 @@ $(function() {
         var index = $(this).index();
         designworks.designWorkShow(index)
     });
-    // skill技巧滚动触发
-    var skillGrow = new skillBarGrow(isPc);
     // 显示大弹窗
     $('#design-swiper').on('click', '.swiper-slide', function() {
         var nowSrc = $(this).find('img').eq(0).attr('src');
@@ -766,17 +725,14 @@ $(function() {
 
     // 向下滚动监听
     $(window).on('scroll', function() {
+        // 【新增条件】如果正在执行菜单跳转动画，暂停监听，防止样式错乱
+        if (window.isNavigating) {
+            return; 
+        }
+
         // html body高度不能设置为100%否则滚动不起作用
         var scrollTop = $(window).scrollTop();
-        $.each(sectionsTop, function(index, item) {
-            if (item > scrollTop) {
-                var left = navListItemsLeft[index];
-                $navLis.removeClass('active');
-                $navLis.eq(index).addClass('active');
-                $navline.css('transform', 'translate(' + left +'px,0)');
-                return false;
-            }
-        });
+
         // 如果在pc下， 对nav进行固定
         if (isPc) {
             if(scrollTop >= navTop && !$nav.hasClass('fixed')) {
@@ -787,20 +743,61 @@ $(function() {
                 $('#works').removeClass('navFixTop');
             }
         }
-        // 为配合手机分别对skill下progress做滚动监测
-        if ( (scrollTop + screenHeight) > skillTop.code && !$('#skill-code').hasClass('hasgrowed') ) {
-            skillGrow.codeGrow();
-            $('#skill-code').addClass('hasgrowed');
-        }
-        if ( (scrollTop + screenHeight + 100) > skillTop.design && !$('#skill-design').hasClass('hasgrowed') ) {
-            skillGrow.designGrow();
-            $('#skill-design').addClass('hasgrowed');
-        }
         // 每次判断设计瀑布是否需要加载
         if(water.checkscrollside(scrollTop)) {
             water.init();
         }
     });
+
+    // 【新】使用 IntersectionObserver 自动高亮导航（带安全降级）
+    var sectionsElements = sections.map(function(id) { return document.querySelector(id); }).filter(Boolean);
+
+    // 检查浏览器是否支持 IntersectionObserver
+    if ('IntersectionObserver' in window) {
+        // --- 走现代方案 ---
+        var observerOptions = {
+            root: null,
+            rootMargin: '-40% 0px -40% 0px',
+            threshold: 0
+        };
+
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    var index = sections.indexOf('#' + entry.target.id);
+                    if (index !== -1) {
+                        $navLis.removeClass('active');
+                        $navLis.eq(index).addClass('active');
+                        if (navListItemsLeft[index] !== undefined) {
+                            $navline.css('transform', 'translate(' + navListItemsLeft[index] + 'px,0)');
+                        }
+                    }
+                }
+            });
+        }, observerOptions);
+
+        sectionsElements.forEach(function(el) {
+            if(el) {
+                observer.observe(el);
+            }
+        });
+
+    } else {
+        // --- 传统兼容方案（兜底）: 如果浏览器不支持 IntersectionObserver，用你原来的 Scroll 监听 ---
+        $(window).on('scroll', function() {
+            if (window.isNavigating) { return; }
+            var scrollTop = $(window).scrollTop();
+            $.each(sectionsTop, function(index, item) {
+                if (item > scrollTop) {
+                    var left = navListItemsLeft[index];
+                    $navLis.removeClass('active');
+                    $navLis.eq(index).addClass('active');
+                    $navline.css('transform', 'translate(' + left + 'px,0)');
+                    return false;
+                }
+            });
+        });
+    }
 
     // 学历认证弹窗
     $schoolCheck.on('click', function(e) {
@@ -835,7 +832,6 @@ $(function() {
     // 高项点击显示图片
     // 所有有.open-img-alert样式的元素 点击都出现弹窗 显示data-imgsrc指向的图片
     $('.open-img-alert').on('click', function() {
-        // https://layui.dev/docs/2.8/layer/index.html#options.content
         var imgsrc = $(this).data('imgsrc');
         var imgtitle = $(this).data('imgtitle');
         if(!imgsrc) {
@@ -845,13 +841,36 @@ $(function() {
         var contentHtml = '<div class="img-alert"><img src="' + imgsrc + '"></div>';
         var dialogArea = isPc ? ['600px', '90%'] : ['100%', '100%'];
         layer.open({
-            type: 1, // page 层类型
+            type: 1,
             title: imgtitle,
             area: dialogArea,
-            shade: 0.7, // 遮罩透明度
-            shadeClose: true, // 点击遮罩区域，关闭弹层
-            anim: 0, // 0-6 的动画形式，-1 不开启
+            shade: 0.7,
+            shadeClose: true,
+            anim: 0,
             content: contentHtml
+        });
+    });
+
+    // 打开Pdf
+    $('.open-iframe-alert').on('click', function() {
+        var iframeUrl = $(this).data('url');
+        var iframeTitle = $(this).data('title');
+        
+        if(!iframeUrl) {
+            return;
+        }
+        iframeTitle = iframeTitle ? iframeTitle : '信息';
+        
+        var dialogArea = isPc ? ['60%', '80%'] : ['100%', '100%'];
+        
+        layer.open({
+            type: 2,
+            title: iframeTitle,
+            area: dialogArea,
+            shade: 0.7,
+            shadeClose: true,
+            anim: 0,
+            content: iframeUrl,
         });
     });
 

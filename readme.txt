@@ -1,8 +1,9 @@
- 2019/12/17
-个人测试 从C:\xampp\htdocs\myself-jl 中复制 更改文件到 此中覆盖 (和f：myself-jl中)
-个人简历持续更新在 F:\working\myself-jl 中git到码云   http://634174214.gitee.io/myself-jianli/
-
 github
 
-https://github.com/634174214/working
-pages: https://634174214.github.io/working/
+2026-04-29 正式迁移到github
+
+https://github.com/634174214/resume
+pages: https://634174214.github.io/resume/
+
+
+resume-print.html 专门用来保存为打印版 一页A4

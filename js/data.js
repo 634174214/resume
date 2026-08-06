@@ -1,170 +1,62 @@
-// 前端技能配置
-var skillCode = [
-    {
-        'label': 'HTML',
-        'percent': 99,
-        'color': '#676969'
+var siteBaseUrl = window.location.href.split('index.html')[0];
+
+var skills = {
+    frontend: {
+        name: '前端开发',
+        icon: '⚡',
+       items: ['JS/ES6+', 'Vue', 'TypeScript', 'Less', 'Tailwind CSS', 'Uni-app', '原生微信小程序', 'Element-UI', 'jQuery', 'Bootstrap', 'LayUI', '响应式开发', '兼容性处理']
     },
-    {
-        'label': 'CSS',
-        'percent': 90,
-        'color': '#DB5C0F'
+    backend: {
+        name: '后端开发',
+        icon: '⚙️',
+        items: ['PHP', 'MySQL', 'MongoDB', 'Python', 'Playwright(数据采集)', 'ThinkPHP', 'RESTful API', '数据安全防护', '原生PHP框架自建']
     },
-    {
-        'label': 'JS',
-        'percent': 90,
-        'color': '#D4D02E'
+    design: {
+        name: '设计能力',
+        icon: '✏️',
+        items: ['Photoshop', 'Illustrator', 'XD', 'Figma', 'InDesign', 'UI/UX设计', 'VI设计', '印刷品设计']
     },
-    {
-        'label': 'JQ',
-        'percent': 88,
-        'color': '#7acef4'
-    },
-    {
-        'label': 'VUE',
-        'percent': 85,
-        'color': '#4fc08d'
-    },
-    {
-        'label': 'LESS',
-        'percent': 90,
-        'color': '#D64747'
-    },
-    {
-        'label': 'UNI',
-        'percent': 80,
-        'color': '#07c160'
-    },
-    {
-        'label': 'PHP',
-        'percent': 70,
-        'color': '#3f51b5'
+    ai: {
+        name: 'AI / 新兴技术',
+        icon: '🤖',
+        items:  ['Python', 'Dify', 'Prompt调优', 'AI 插件/自定义工具开发', 'Agent工具调用 (Tool Calling)', '大模型API集成']
     }
-];
-// 设计技能配置
-var skillDesign = [
-    {
-        'label': 'PS',
-        'percent': 95,
-        'color': '#2f2585'
-    },
-    {
-        'label': 'AI',
-        'percent': 90,
-        'color': '#d37617'
-    },
-    {
-        'label': 'ID',
-        'percent': 85,
-        'color': '#842150'
-    },
-    {
-        'label': 'CDR',
-        'percent': 70,
-        'color': '#83c327'
-    },
-    {
-        'label': 'XD',
-        'percent': 85,
-        'color': '#f22dc1'
-    },
-    {
-        'label': 'FIGMA',
-        'percent': 80,
-        'color': '#4c4d4d'
-    },
-    {
-        'label': 'FLASH',
-        'percent': 80,
-        'color': '#bb1b20'
-    },
-    {
-        'label': 'OFFICE',
-        'percent': 95,
-        'color': '#1385c4'
-    }
-];
+};
+
+
 // 未上线项目二维码显示
 var notline = 'images/notline.jpg';
 // 前端推荐作品 数量<=3,要保证与tabs中的项目一一对应
 var webBetterPath = 'images/webbetter/';
 var webBetter = [
     {
-        'label': 'H5', // 项目标签名
-        'qrclickShow': false, // 手机版点击时，是否显示显示二维码， false=跳转到默认连接 true点击出现二维码
-        'data': [
-            {
-                'src': webBetterPath + '1-yantai.jpg', // 作品图片
-                'qr': webBetterPath + '1-yantai-qr.png', // 作品上线二维码
-                'name': '2019世界工业设计大会',            // 作品名称
-                'href': 'http://vip.qdxin.cn/h5/2019/yantaidesign1016/'     // 作品链接
-            },
-            {
-                'src': webBetterPath + '1-vrqd.jpg',
-                'qr': webBetterPath + '1-vrqd-qr.png',
-                'name': '全景青岛，时尚走进生活',
-                'href': 'http://vr.qdxin.cn/topic/1904/'
-            },
-            {
-                'src': webBetterPath + '1-bainian.jpg',
-                'qr': webBetterPath + '1-bainian-qr.png',
-                'name': '百年青岛沧桑巨变',
-                'href': 'http://vip.qdxin.cn/h5/2019/qdhistory/'
-            }
-        ],
-    },
-    {
-        'label': 'APP / 微信开发',
+        'label': '网站 / WebApp',
         'qrclickShow': false,
         'data': [
-            {
-                'src': webBetterPath + '6-xinhaoapp.jpg',
-                'qr': webBetterPath + '6-xinhaoapp-qr.png',
-                'name': '信号新闻App',
-                'href': 'http://jl.wubin.work/download/xinhao-app.html'
-            },
-            {
-                'src': webBetterPath + '2-ruiyuanxing.jpg',
-                'qr': webBetterPath + '2-ruiyuanxing-qr.png',
-                'name': '瑞源兴微信商城（前后台）',
-                'href': 'http://mp2.qdxin.cn/ps/ryx/index.php'
-            },
-            {
-                'src': webBetterPath + '2-xinxin.jpg',
-                'qr': webBetterPath + '2-xinxin-qr.png',
-                'name': '信新相映微信公益平台',
-                'href': 'http://mp2.qdxin.cn/gongyi/index.php'
-            },
-            // {
-            //     'src': webBetterPath + '2-xinshop.jpg',
-            //     'qr': webBetterPath + '2-xinshop-qr.png',
-            //     'name': '信新相映积分商城（前后台）',
-            //     'href': 'http://mp2.qdxin.cn/gongyi/change.php'
-            // }
-        ],
-    },
-    {
-        'label': 'PC / 手机网站',
-        'qrclickShow': false,
-        'data': [
-            {
-                'src': webBetterPath + '3-xinziyuan.jpg',
-                'qr': webBetterPath + '3-xinziyuan-qr.png',
-                'name': '信网资源',
-                'href': 'https://www.qdxin.cn/ziyuan/'
-            },
             {
                 'src': webBetterPath + '3-xinm.jpg',
-                'qr': webBetterPath + '3-xinm-qr.png',
-                'name': '信网手机版',
-                'href': 'https://m.qdxin.cn/'
+                'qr': '',
+                'name': '信网主站和手机版',
+                'href': 'https://www.qdxin.cn/'
             },
             {
-                'src': webBetterPath + '3-qdpiyao.jpg',
-                'qr': webBetterPath + '3-qdpiyao-qr.png',
-                'name': '青岛辟谣',
-                'href': 'https://piyao.qdxin.cn/'
+                'src': webBetterPath + 'xin-smart-photo.jpg',
+                'qr': '',
+                'name': '信网智绘',
+                'href': 'https://wubin.infinityfreeapp.com/my-works/works/photo-smart/?i=1'
             },
+            {
+                'src': webBetterPath + 'xin-card.jpg',
+                'qr': '',
+                'name': '信网卡片海报系统',
+                'href': 'https://wubin.infinityfreeapp.com/my-works/works/xin-card/app/login.html'
+            },
+            // {
+            //     'src': webBetterPath + '3-qdpiyao.jpg',
+            //     'qr': webBetterPath + '3-qdpiyao-qr.png',
+            //     'name': '青岛辟谣',
+            //     'href': 'https://piyao.qdxin.cn/'
+            // },
             // {
             //     'src': webBetterPath + '3-dazong.jpg',
             //     'qr': webBetterPath + '3-dazong-qr.png',
@@ -180,45 +72,52 @@ var webBetter = [
         ],
     },
     {
-        'label': 'vue案例',
+        'label': 'Vue',
         'qrclickShow': false,
         'data': [
-            // {
-            //     'src': webBetterPath + '4-elme.jpg',
-            //     'qr': webBetterPath + '4-elme-qr.png',
-            //     'name': 'Vue高仿饿了么（自制）',
-            //     'href': 'http://634174214.gitee.io/myself-vue-elme/#/goods'
-            // },
+            {
+                'src': webBetterPath + '4-elme.jpg',
+                // 没有qr链接会自动生成二维码
+                'qr': '',
+                'name': 'Vue高仿饿了么',
+                'href': 'https://634174214.github.io/portfolio/works/local/webapp/myself-vue-elme/?id=123'
+            },
             {
                 'src': webBetterPath + '4-music.jpg',
-                'qr': webBetterPath + '4-music-qr.png',
-                'name': '炸鸡音乐WebAPP',
-                'href': 'http://my.wubin.work/works/qqmusic-vue3/html/'
-            },
-            // {
-            //     'src': webBetterPath + '4-qdlib.jpg',
-            //     'qr': webBetterPath + '4-qdlib-qr.png',
-            //     'name': '信网资源-全栈vue开发',
-            //     'href': 'http://qd.wubin.work/'
-            // },
-            {
-                'src': webBetterPath + '4-mylawai.jpg',
-                'qr': webBetterPath + '4-mylawai-qr.png',
-                'name': '信法网AI调解员',
-                'href': 'http://my.wubin.work/works/xin-law-ai/'
+                'qr': '',
+                'name': '炸鸡音乐',
+                'href': 'https://wubin.infinityfreeapp.com/my-works/works/qqmusic-vue3/html/'
             },
             {
-                'src': webBetterPath + '4-yiqing.jpg',
-                'qr': webBetterPath + '4-yiqing-qr.png',
-                'name': '青岛肺炎疫情实时数据平台',
-                'href': 'http://vip.qdxin.cn/h5/2020/yiqing/?show'
+                'src': webBetterPath + 'xin-zt-demo.jpg',
+                'qr': '',
+                'name': '信网专题',
+                'href': 'https://www.qdxin.cn/special/zt-app/app/?id=545'
             }
         ],
     },
     {
-        'label': '微信小程序',
+        'label': 'APP / 小程序',
         'qrclickShow': true,
         'data': [
+            {
+                'src': webBetterPath + '6-xinhaoapp.jpg',
+                'qr': '',
+                'name': '信号新闻App',
+                'href': siteBaseUrl + 'download/xinhao-app.html'
+            },
+            // {
+            //     'src': webBetterPath + '2-ruiyuanxing.jpg',
+            //     'qr': webBetterPath + '2-ruiyuanxing-qr.png',
+            //     'name': '瑞源兴微信商城（前后台）',
+            //     'href': 'http://mp2.qdxin.cn/ps/ryx/index.php'
+            // },
+            // {
+            //     'src': webBetterPath + '2-xinxin.jpg',
+            //     'qr': webBetterPath + '2-xinxin-qr.png',
+            //     'name': '信新相映微信公益平台',
+            //     'href': 'http://mp2.qdxin.cn/gongyi/index.php'
+            // },
             {
                 'src': webBetterPath + '5-xinnewsmini.jpg',
                 'qr': webBetterPath + '5-xinnewsmini-qr.jpg',
@@ -231,633 +130,82 @@ var webBetter = [
                 'name': '青岛网络辟谣平台小程序',
                 'href': 'javascript:;'
             },
-            {
-                'src': webBetterPath + '5-weichenmini.jpg',
-                'qr': webBetterPath + '5-weichenmini-qr.jpg',
-                'name': '微尘公益基金小程序',
-                'href': 'javascript:;'
-            }
+            // {
+            //     'src': webBetterPath + '5-weichenmini.jpg',
+            //     'qr': webBetterPath + '5-weichenmini-qr.jpg',
+            //     'name': '微尘公益基金小程序',
+            //     'href': 'javascript:;'
+            // }
+            // {
+            //     'src': webBetterPath + '2-xinshop.jpg',
+            //     'qr': webBetterPath + '2-xinshop-qr.png',
+            //     'name': '信新相映积分商城（前后台）',
+            //     'href': 'http://mp2.qdxin.cn/gongyi/change.php'
+            // }
         ],
-    }
-];
-
-// 全部前端作品
-var webWorksPath = 'images/allwebworks/';
-var webALLWorks = [
-    // APP开发
+    },
     {
-        'label': 'APP开发',
+        'label': 'Game',
         'qrclickShow': false,
         'data': [
-            {
-                'src': webBetterPath + '6-xinhaoapp.jpg',
-                'qr': webBetterPath + '6-xinhaoapp-qr.png',
-                'name': '信号新闻App',
-                'href': 'http://jl.wubin.work/download/xinhao-app.html'
-            }
-        ]
-    },
-    // Vue案例
-    {
-        'label': 'VUE案例',
-        'qrclickShow': false,
-        'data': [
-            {
-                'src': webWorksPath + 'vue-aifabao.jpg',
-                'qr': webWorksPath + 'vue-aifabao-qr.png',
-                'name': '信网AI智案法宝(正式地址)',
-                'href': 'https://law.qdxin.cn/pro/'
-            },
-            {
-                'src': webWorksPath + 'vue-article-check.jpg',
-                'qr': webWorksPath + 'vue-article-check-qr.png',
-                'name': '信网AI校稿助手(本地)',
-                'href': 'http://my.wubin.work/works/article-check/'
-            },
-            {
-                'src': webWorksPath + 'vue-lawai.jpg',
-                'qr': webWorksPath + 'vue-lawai-qr.png',
-                'name': '信法网AI调解员(正式地址)',
-                'href': 'https://law.qdxin.cn/ai/'
-            },
-            {
-                // 未在mywork上部署
-                'src': webWorksPath + 'vue-xinps.jpg',
-                'qr': webWorksPath + 'vue-xinps-qr.png',
-                'name': '信网创图在线设计系统',
-                'href': 'https://vip.qdxin.cn/vip/anli/pro/xin-ps/'
-            },
-            {
-                'src': webWorksPath + 'vue-music.jpg',
-                'qr': webWorksPath + 'vue-music-qr.png',
-                'name': 'Vue制作炸鸡音乐（自制）',
-                'href': 'http://my.wubin.work/works/qqmusic-vue3/html/'
-            },
-            {
-                'src': webWorksPath + 'vue-xinvideo.jpg',
-                'qr': webWorksPath + 'vue-xinvideo-qr.png',
-                'name': '信网短视频',
-                'href': 'https://v.qdxin.cn/video-fs/?id=488'
-            },
-            {
-                'src': webWorksPath + 'vue-yiqing.jpg',
-                'qr': webWorksPath + 'vue-yiqing-qr.png',
-                'name': '青岛肺炎疫情平台',
-                'href': 'http://vip.qdxin.cn/h5/2020/yiqing/?show'
-            },
-            {
-                'src': webWorksPath + 'vue-2024springcard.jpg',
-                'qr': webWorksPath + 'vue-2024springcard-qr.png',
-                'name': '2024春节贺卡',
-                'href': 'https://vip.qdxin.cn/2024/card/index.html?id=spring'
-            },
-            {
-                'src': webWorksPath + 'vue-qdlib.jpg',
-                'qr': webWorksPath + 'vue-qdlib-qr.png',
-                'name': '青岛风光库',
-                'href': 'http://qd.wubin.work/'
-            },
-            {
-                'src': webWorksPath + 'vue-elme.jpg',
-                'qr': webWorksPath + 'vue-elme-qr.png',
-                'name': 'Vue高仿饿了么（自制）',
-                'href': 'http://634174214.gitee.io/myself-vue-elme/#/goods'
-            },
-            {
-                'src': webWorksPath + 'vue-song-lucky.jpg',
-                'qr': webWorksPath + 'vue-song-lucky-qr.png',
-                'name': '幸运翻翻翻（抽奖系统）',
-                'href': 'http://my.wubin.work/works/song-choujiang/'
-            },
-            {
-                'src': webWorksPath + 'vue-text2audio.jpg',
-                'qr': webWorksPath + 'vue-text2audio-qr.png',
-                'name': '信网语音合成系统',
-                'href': 'http://vip.qdxin.cn/vip/anli/pro/text-mp3/'
-            },
-            {
-                'src': webWorksPath + 'vue-haibao.jpg',
-                'qr': webWorksPath + 'vue-haibao-qr.png',
-                'name': '信网新闻海报生成工具',
-                'href': 'http://my.wubin.work/works/sale-card/'
-            },
-            {
-                'src': webWorksPath + 'pc-2023zt-huizong-tool.jpg',
-                'qr': webWorksPath + 'pc-2023zt-huizong-tool-qr.png',
-                'name': '信网新闻专题注释工具',
-                'href': 'http://my.wubin.work/works/xin-zt-huizong/tool/'
-            },
-            {
-                'src': webWorksPath + 'h5-2022-toupiao.jpg',
-                'qr': webWorksPath + 'h5-2022-toupiao-qr.png',
-                'name': '信网投票系统（原型）',
-                'href': 'http://my.wubin.work/works/toupiao/?id=5'
-            },
-            {
-                'src': webWorksPath + 'vue-ns-wegame.jpg',
-                'qr': webWorksPath + 'vue-ns-wegame-qr.png',
-                'name': '游小圈（前后端开发）',
-                'href': 'http://ns.wubin.work/'
-            },
-            {
-                'src': webWorksPath + 'vue-hospitals.jpg',
-                'qr': webWorksPath + 'vue-hospitals-qr.png',
-                'name': '青岛出征湖北医疗队宣言',
-                'href': 'http://vip.qdxin.cn/h5/2020/hospital-fight/'
-            },
-            {
-                'src': webWorksPath + 'vue-xintuku.jpg',
-                'qr': webWorksPath + 'vue-xintuku-qr.png',
-                'name': '信网图库(仅支持PC)',
-                'href': 'http://vip.qdxin.cn/vip/anli/pro/imgmove2/'
-            }
-        ]
-    },
-     // h5类别
-     {
-        'label': 'H5',   // 标题标签
-        // 点击是否显示二维码
-        'qrclickShow': false,
-        'data': [  // 数据
-            {
-                'src': webWorksPath + 'h5-2024heka.jpg',
-                'qr': webWorksPath + 'h5-2024heka-qr.png',
-                'name': '2024制作你的春节贺卡',
-                'href': 'https://vip.qdxin.cn/2024/card/index.html?id=spring'
-            },
-            {
-                'src': webWorksPath + 'h5-piyao_yiqing.jpg',
-                'qr': webWorksPath + 'h5-piyao_yiqing-qr.png',
+             {
+                'src': webBetterPath + 'game-piyao.jpg',
+                'qr': '',
                 'name': '辟谣游戏:动动手指,粉碎涉青谣言!',
                 'href': 'http://vip.qdxin.cn/h5/2022/piyao-yiqing/'
             },
             {
-                'src': webWorksPath + 'h5-2021-haier.jpg',    // 展示图片
-                'qr': webWorksPath + 'h5-2021-haier-qr.png',  // 作品二维码
-                'name': '新房装修 旧房改造-海尔三翼鸟',                      // 作品名称
-                'href': 'http://vip.qdxin.cn/2021/haier/'               // 作品链接
-            },
-            {
-                'src': webWorksPath + 'h5-sanyiVR.jpg',
-                'qr': webWorksPath + 'h5-sanyiVR-qr.png',
-                'name': '青岛三医90年发展足迹VR展',
-                'href': 'http://vr.qdxin.cn/topic/sanyi-history/'
-            },
-            {
-                'src': webWorksPath + 'h5-yantai.jpg',    // 展示图片
-                'qr': webWorksPath + 'h5-yantai-qr.png',  // 作品二维码
-                'name': '2019世界工业设计大会',                      // 作品名称
-                'href': 'http://vip.qdxin.cn/h5/2019/yantaidesign1016/'               // 作品链接
-            },
-            {
-                'src': webWorksPath + 'h5-vrqd.jpg',
-                'qr': webWorksPath + 'h5-vrqd-qr.png',
-                'name': '全景青岛，时尚走进生活',
-                'href': 'http://vr.qdxin.cn/topic/1904/'
-            },
-            {
-                'src': webWorksPath + 'h5-bainian.jpg',
-                'qr': webWorksPath + 'h5-bainian-qr.png',
-                'name': '百年青岛沧桑巨变',
-                'href': 'http://vip.qdxin.cn/h5/2019/qdhistory/'
-            },
-            {
-                'src': webWorksPath + 'h5-meiliqd.jpg',
-                'qr': webWorksPath + 'h5-meiliqd-qr.png',
-                'name': '美丽青岛 迎新春',
-                'href': 'http://vip.qdxin.cn/h5/2018/meiliqd2018/'
-            },
-            {
-                'src': webWorksPath + 'h5-steam-xinzt.jpg',
-                'qr': webWorksPath + 'h5-steam-xinzt-qr.png',
-                'name': '信网专题系统 | 案例展示',
-                'href': 'http://www.qdxin.cn/special/zt-app/app/?id=84'
-            },
-            {
-                'src': webWorksPath + 'h5-steam-xin-imgzt.jpg',
-                'qr': webWorksPath + 'h5-steam-xin-imgzt-qr.png',
-                'name': '图片H5专题系统 | 案例展示',
-                'href': 'http://www.qdxin.cn/special/zt-app/app/?id=84'
-            },
-            {
-                'src': webWorksPath + 'h5-2019year.jpg',
-                'qr': webWorksPath + 'h5-2019year-qr.png',
-                'name': '2019新春贺卡',
-                'href': 'http://vip.qdxin.cn/2019/newyear2019/'
-            },
-            {
-                'src': webWorksPath + 'h5-piyao2019.jpg',
-                'qr': webWorksPath + 'h5-piyao2019-qr.png',
-                'name': '青岛辟谣2019年度总结',
-                'href': 'http://vip.qdxin.cn/h5/2019/piyao2019/'
-            },
-            {
-                'src': webWorksPath + 'h5-fangzhan2020.jpg',
-                'qr': webWorksPath + 'h5-fangzhan2020-qr.png',
-                'name': '2020信网线上房展',
-                'href': 'http://vip.qdxin.cn/h5/2020/qdfangzhan0303/'
-            },
-            {
-                'src': webWorksPath + 'h5-laoshanvideo.jpg',
-                'qr': webWorksPath + 'h5-laoshanvideo-qr.png',
-                'name': '崂山城区·城载人文 ',
-                'href': 'http://vr.qdxin.cn/18/lsvideovr/'
-            },
-            {
-                'src': webWorksPath + 'h5-qyifight.jpg',
-                'qr': webWorksPath + 'h5-qyifight-qr.png',
-                'name': '青医医疗队出征宣言',
-                'href': 'http://vip.qdxin.cn/h5/2020/qingyi0207/'
-            },
-            {
-                'src': webWorksPath + 'h5-wenhuaVR.jpg',
-                'qr': webWorksPath + 'h5-wenhuaVR-qr.png',
-                'name': '青岛文化产业园全景地图 ',
-                'href': 'http://vr.qdxin.cn/topic/map-vr-1905/'
-            },
-            {
-                'src': webWorksPath + 'h5-xihaian.jpg',
-                'qr': webWorksPath + 'h5-xihaian-qr.png',
-                'name': '西海岸新区三周年连环画',
-                'href': 'http://vip.qdxin.cn/h5/2018/ephoto/index/'
-            },
-            {
-                'src': webWorksPath + 'h5-jiaozhou.jpg',
-                'qr': webWorksPath + 'h5-jiaozhou-qr.png',
-                'name': '预见2020年的胶州(hype制作)',
-                'href': 'http://vip.qdxin.cn/h5/2017/jzh5-2020-17/'
-            },
-            {
-                'src': webWorksPath + 'h5-qdwater.jpg',
-                'qr': webWorksPath + 'h5-qdwater-qr.png',
-                'name': '让市民喝上放心水',
-                'href': 'http://vip.qdxin.cn/h5/2019/qdwater/'
-            },
-            {
-                'src': webWorksPath + 'h5-qdcharity.jpg',
-                'qr': webWorksPath + 'h5-qdcharity-qr.png',
-                'name': '怡善青岛 脱贫攻坚',
-                'href': 'http://vip.qdxin.cn/h5/2019/qdcharity/'
-            },
-            {
-                'src': webWorksPath + 'h5-game-jiejb.jpg',
-                'qr': webWorksPath + 'h5-game-jiejb-qr.png',
+                'src': webBetterPath + 'game-caishen.jpg',
+                'qr': '',
                 'name': '迎新春，接金币游戏',
                 'href': 'http://vip.qdxin.cn/vip/anli/pro/xin-games/games/jie-jb/'
             },
             {
-                'src': webWorksPath + 'h5-game-touzi.jpg',
-                'qr': webWorksPath + 'h5-game-touzi-qr.png',
-                'name': '来高新区秒变亿万富翁吧！',
-                'href': 'http://vip.qdxin.cn/vip/anli/pro/xin-games/games/touzi/'
-            },
-            {
-                'src': webWorksPath + 'h5-suning.jpg',
-                'qr': webWorksPath + 'h5-suning-qr.png',
+                'src': webBetterPath + 'game-suning.jpg',
+                'qr': '',
                 'name': '奔向苏宁不能停',
-                'href': 'http://act.qd.sina.com.cn/8815/mobile'
-            },
-            {
-                'src': webWorksPath + 'h5-changee.jpg',
-                'qr': webWorksPath + 'h5-changee-qr.png',
-                'name': '全民射嫦娥',
-                'href': 'http://vip.qdxin.cn/vip/anli/pro/xin-games/games/change/'
-                // 'href': 'http://qd.sina.com.cn/iframe/6/_490.html'
-            },
-            {
-                'src': webWorksPath + 'h5-maikaile.jpg',
-                'qr': webWorksPath + 'h5-maikaile-qr.png',
-                'name': '奔向麦凯乐',
-                // 'href': 'http://act.qd.sina.com.cn/8318/mobile?from=timeline&isappinstalled=0',
                 'href': 'http://vip.qdxin.cn/vip/anli/pro/xin-games/games/paoku26/'
-            },
-            {
-                'src': webWorksPath + 'h5-iphone6s.jpg',
-                'qr': webWorksPath + 'h5-iphone6s-qr.png',
-                'name': '如何2000元用上iPhone6s',
-                'href': 'http://qd.sina.com.cn/iframe/6/_530.html?amp;amp;isappinstalled=0&amp;from=timeline&from=timeline&isappinstalled=0'
-            },
-            {
-                'src': webWorksPath + 'h5-huangdao.jpg',
-                'qr': webWorksPath + 'h5-huangdao-qr.png',
-                'name': '黄岛新区成立3周年连环画',
-                'href': 'http://vip.qdxin.cn/vip/anli/pro/huangdao/'
-            },
-            {
-                'src': webWorksPath + 'h5-onroad.jpg',
-                'qr': webWorksPath + 'h5-onroad-qr.png',
-                'name': '在路上 他们最美',
-                'href': 'http://vip.qdxin.cn/h5/2018/onroad/'
-            },
-            {
-                'src': webWorksPath + 'h5-lshandbook.jpg',
-                'qr': webWorksPath + 'h5-lshandbook-qr.png',
-                'name': '青岛崂山区旅游指南',
-                'href': 'http://vip.qdxin.cn/h5/2018/lshandbook/'
-            },
-            {
-                'src': webWorksPath + 'h5-dongjiqd.jpg',
-                'qr': webWorksPath + 'h5-dongjiqd-qr.png',
-                'name': '人情味·体验青岛海滨冬游',
-                'href': 'http://qd.sina.com.cn/qddjlv/index.html'
             }
-        ]
+        ],
     },
-    // 微信小程序
     {
-        'label': '微信小程序',
-        'qrclickShow': true,
+        'label': 'H5 ', // 项目标签名
+        'qrclickShow': false, // 手机版点击时，是否显示显示二维码， false=跳转到默认连接 true点击出现二维码
         'data': [
             {
-                'src': webWorksPath + 'mini-xinnews.jpg',
-                'qr': webWorksPath + 'mini-xinnews-qr.png',
-                'name': '信网资讯小程序',
-                'href': 'javascript:;'
+                'src': webBetterPath + 'xin-spring-card.jpg',
+                'qr': '',
+                'name': '2024制作你的春节贺卡',
+                'href': 'https://vip.qdxin.cn/2024/card/index.html?id=spring'
+            },
+            // {
+            //     'src': webBetterPath + '3-xinziyuan.jpg',
+            //     'qr': webBetterPath + '3-xinziyuan-qr.png',
+            //     'name': '信网资源',
+            //     'href': 'https://www.qdxin.cn/ziyuan/'
+            // },
+            {
+                'src': webBetterPath + '4-yiqing.jpg',
+                'qr': '',
+                'name': '青岛肺炎疫情实时数据平台',
+                'href': 'http://vip.qdxin.cn/h5/2020/yiqing/?show'
             },
             {
-                'src': webWorksPath + 'mini-piyao.jpg',
-                'qr': webWorksPath + 'mini-piyao-qr.png',
-                'name': '青岛网络辟谣平台小程序',
-                'href': 'javascript:;'
+                'src': webBetterPath + '1-vrqd.jpg',
+                'qr': '',
+                'name': '全景青岛，时尚走进生活',
+                'href': 'http://vr.qdxin.cn/topic/1904/'
             },
-            {
-                'src': webWorksPath + 'mini-weichen.jpg',
-                'qr': webWorksPath + 'mini-weichen-qr.jpg',
-                'name': '微尘公益基金小程序',
-                'href': 'javascript:;'
-            }
-        ]
-    },
-    // pc/m响应式网站
-    {
-        'label': '响应式网站',
-        'qrclickShow': false,
-        'data': [
-            {
-                'src': webWorksPath + 'pc-sheqipiyao.jpg',
-                'qr': webWorksPath + 'pc-sheqipiyao-qr.png',
-                'name': '青岛市涉企网络侵权举报专区',
-                'href': 'http://vip.qdxin.cn/2023/sheqi-piyao/'
-            },
-            {
-                'src': webWorksPath + 'pc-2023zt-huizong.jpg',
-                'qr': webWorksPath + 'pc-2023zt-huizong-qr.png',
-                'name': '信网新闻专题模板',
-                'href': 'http://my.wubin.work/works/xin-zt-huizong/zt/index.html?origin=https://doc.qdxin.com.cn/'
-            },
-            {
-                'src': webWorksPath + 'pc-xindoc.jpg',
-                'qr': webWorksPath + 'pc-xindoc-qr.png',
-                'name': '信网智库',
-                'href': 'http://my.wubin.work/works/xin-doc/登录.html'
-            },
-            {
-                'src': webWorksPath + 'pc-piyaoxinhao2023.jpg',
-                'qr': webWorksPath + 'pc-piyaoxinhao2023-qr.png',
-                'name': '辟谣信号站 | 专题',
-                'href': 'http://vip.qdxin.cn/2023/piyao-huizong/index.html'
-            },
-            {
-                'src': webWorksPath + 'pc-shinan-wenming.png',
-                'qr': webWorksPath + 'pc-shinan-wenming-qr.png',
-                'name': '文明出行我践行 信用市南 | 专题',
-                'href': 'http://vip.qdxin.cn/2023/wenming/'
-            },
-            {
-                'src': webWorksPath + 'pc-2022huazhan.jpg',
-                'qr': webWorksPath + 'pc-2022huazhan-qr.png',
-                'name': '喜迎二十大 翰墨颂党恩 | 专题',
-                'href': 'http://vip.qdxin.cn/2022/xin-huazhan0929/'
-            },
-            {
-                'src': webWorksPath + 'pc-final2021.jpg',
-                'qr': webWorksPath + 'pc-final2021-qr.png',
-                'name': '2021青岛年度总结 | 专题',
-                'href': 'http://vip.qdxin.cn/h5/2022/2021zongjie/'
-            },
-            {
-                'src': webWorksPath + 'pc-wtool.jpg',
-                'qr': webWorksPath + 'pc-wtool-qr.png',
-                'name': '在线工具箱',
-                'href': 'http://tool.wubin.work/'
-            },
-            {
-                'src': webWorksPath + 'pc-2021yinyuejie.jpg',
-                'qr': webWorksPath + 'pc-2021yinyuejie-qr.png',
-                'name': '青岛市乐队网络大赛 | 专题',
-                'href': 'http://my.wubin.work/works/web-music/'
-            },
-            {
-                'src': webWorksPath + 'pc-gongyizt.jpg',
-                'qr': webWorksPath + 'pc-gongyizt-qr.png',
-                'name': '信新相映公益服务 | 专题',
-                'href': 'http://vip.qdxin.cn/2020/gongyi0413/'
-            },
-            {
-                'src': webWorksPath + 'pc-xinziyuan.jpg',
-                'qr': webWorksPath + 'pc-xinziyuan-qr.png',
-                'name': '信网资源',
-                'href': 'http://www.qdxin.cn/ziyuan/'
-            },
-            {
-                'src': webWorksPath + 'pc-dazong.jpg',
-                'qr': webWorksPath + 'pc-dazong-qr.png',
-                'name': '大宗新闻网',
-                'href': 'http://www.dazongnews.com/'
-            },
-            {
-                'src': webWorksPath + 'pc-yanyijituan.jpg',
-                'qr': webWorksPath + 'pc-yanyijituan-qr.png',
-                'name': '青岛演艺集团官方网站',
-                'href': 'http://www.qdyyjt.com/'
-            },
-            {
-                'src': webWorksPath + 'pc-xxindata.jpg',
-                'qr': webWorksPath + 'pc-xxindata-qr.png',
-                'name': '信新相映大数据可视化平台',
-                'href':  'http://vip.qdxin.cn/h5/2020/xinxindata/'
-            },
-            {
-                'src': webWorksPath + 'pc-weichen.jpg',
-                'qr': webWorksPath + 'pc-weichen-qr.png',
-                'name': '微尘公益官网',
-                'href':  'https://www.weichenfoundation.com/'
-            },
-            {
-                'src': webWorksPath + 'pc-chuanboli.jpg',
-                'qr': webWorksPath + 'pc-chuanboli-qr.png',
-                'name': '信网传播力',
-                'href': 'http://www.qdxin.cn/about/chuanboli/'
-            },
-            {
-                'src': webWorksPath + 'pc-final2020.jpg',
-                'qr': webWorksPath + 'pc-final2020-qr.png',
-                'name': '信网2020年终总结',
-                'href': 'http://vip.qdxin.cn/2021/xfinal2020/'
-            },
-            {
-                'src': webWorksPath + 'pc-piyao.jpg',
-                'qr': webWorksPath + 'pc-piyao-qr.png',
-                'name': '信网青岛辟谣频道',
-                'href': 'http://piyao.qdxin.cn/'
-            },
-            {
-                'src': webWorksPath + 'other-yuanzi.jpg',
-                'qr': webWorksPath + 'other-yuanzi-qr.png',
-                'name': '中国院子网',
-                // http://my.wubin.work/works/china-yuanzi/
-                'href': 'http://vip.qdxin.cn/vip/anli/pro/chinayz/start.html'
-            },
-            {
-                'src': webWorksPath + 'pc-xinfa.jpg',
-                'qr': webWorksPath + 'pc-xinfa-qr.png',
-                'name': '青岛信法网',
-                'href': 'http://law.qdxin.cn/'
-            },
-            {
-                'src': webWorksPath + 'pc-final2019.jpg',
-                'qr': webWorksPath + 'pc-final2019-qr.png',
-                'name': '信网2019年终总结',
-                'href': 'http://vip.qdxin.cn/2020/xfinal2019/'
-            },
-            {
-                'src': webWorksPath + 'pc-xinlive.jpg',
-                'qr': webWorksPath + 'pc-xinlive-qr.png',
-                'name': '信网直播频道',
-                'href': 'http://live.qdxin.cn/'
-            },
-            {
-                'src': webWorksPath + 'pc-xinlivenei.jpg',
-                'qr': webWorksPath + 'pc-xinlivenei-qr.png',
-                'name': '信网实时直播（回放）',
-                'href': 'http://mp.qdxin.cn/public/xwqmt/live/html/104.html'
-            },
-            {
-                'src': webWorksPath + 'pc-xinvr.jpg',
-                'qr': webWorksPath + 'pc-xinvr-qr.png',
-                'name': '信网VR频道',
-                'href': 'http://vr.qdxin.cn/'
-            },
-            {
-                'src': webWorksPath + 'pc-xinhouse.jpg',
-                'qr': webWorksPath + 'pc-xinhouse-qr.png',
-                'name': '信网房产频道',
-                'href': 'http://house.qdxin.cn/'
-            },
-            {
-                'src': webWorksPath + 'pc-lookqd.jpg',
-                'qr': webWorksPath + 'pc-lookqd-qr.png',
-                'name': '瞰青岛 改革开发40年',
-                'href': 'http://vip.qdxin.cn/2018/seeqd1225/'
-            },
-            {
-                'src': webWorksPath + 'pc-xindangjian.jpg',
-                'qr': webWorksPath + 'pc-xindangjian-qr.png',
-                'name': '信网党建频道',
-                'href': 'http://dangjian.qdxin.cn/'
-            },
-            {
-                'src': webWorksPath + 'pc-qdwenming.jpg',
-                'qr': webWorksPath + 'pc-qdwenming-qr.png',
-                'name': '青岛文明细节',
-                'href': 'http://vip.qdxin.cn/2018/qdwenming/'
-            },
-            {
-                'src': webWorksPath + 'pc-xinxin.jpg',
-                'qr': webWorksPath + 'pc-xinxin-qr.png',
-                'name': '信新相映公益平台',
-                'href': 'http://gongyi.qdxin.cn/'
-            },
-            {
-                'src': webWorksPath + 'pc-xinlian.jpg',
-                'qr': webWorksPath + 'pc-xinlian-qr.png',
-                'name': '信链网',
-                'href': 'http://b.qdxin.cn/'
-            },
-            {
-                'src': webWorksPath + 'pc-xinchuangtou.jpg',
-                'qr': webWorksPath + 'pc-xinchuangtou-qr.png',
-                'name': '信网创投青岛频道',
-                'href': 'http://b.qdxin.cn/'
-            },
-            {
-                'src': webWorksPath + 'pc-xinvideo.jpg',
-                'qr': webWorksPath + 'pc-xinvideo-qr.png',
-                'name': '信网视频频道',
-                'href': 'http://v.qdxin.cn/'
-            },
-            {
-                'src': webWorksPath + 'pc-wangshi.jpg',
-                'qr': webWorksPath + 'pc-wangshi-qr.png',
-                'name': '网事如歌专题',
-                'href': 'http://www.qdxin.cn/special/2016/0509qdgoodstory/'
-            }
-        ]
-    },
-    // 微信开发
-    {
-        'label': '微信开发',
-        'qrclickShow': false,
-        'data': [
-            {
-                'src': webWorksPath + 'wx-ruiyuanxing.jpg',
-                'qr': webWorksPath + 'wx-ruiyuanxing-qr.png',
-                'name': '瑞源兴微信商城（前后台）',
-                'href': 'http://mp2.qdxin.cn/ps/ryx/index.php'
-            },
-            {
-                'src': webWorksPath + 'wx-xinxin.jpg',
-                'qr': webWorksPath + 'wx-xinxin-qr.png',
-                'name': '信新相映微信公益平台',
-                'href': 'http://mp2.qdxin.cn/gongyi/index.php'
-            },
-            {
-                // 暂未上线 待改链接
-                'src': webWorksPath + 'wx-xinshop.jpg',
-                'qr': webWorksPath + 'wx-xinshop-qr.png',
-                'name': '信新相映积分商城（前后台）',
-                'href': 'http://mp2.qdxin.cn/gongyi/change.php'
-            }
-        ]
-    },
-    // 其他
-    {
-        'label': '其他项目',
-        'qrclickShow': false,
-        'data': [
-            {
-                'src': webWorksPath + 'other-wlib.jpg',
-                'qr': webWorksPath + 'other-wlib-qr.png',
-                'name': '肆库',
-                'href': 'http://lib.wubin.work/'
-            },
-            {
-                'src': webWorksPath + 'other-wdoc.jpg',
-                'qr': webWorksPath + 'other-wdoc-qr.png',
-                'name': '我的专栏',
-                'href': 'http://doc.wubin.work/'
-            },
-            {
-                'src': webWorksPath + 'other-faxianqd.jpg',
-                'qr': webWorksPath + 'other-faxianqd-qr.png',
-                'name': '发现青岛数字版',
-                'href': 'http://faxian.qdxin.cn/'
-            },
-            {
-                'src': webWorksPath + 'other-yidaiyilu.jpg',
-                'qr': webWorksPath + 'other-yidaiyilu-qr.png',
-                'name': '信网一代一路频道',
-                'href': 'http://vip.qdxin.cn/2018/yidaiyilu0609/'
-            },
-            {
-                'src': webWorksPath + 'other-qdgongyi.jpg',
-                'qr': webWorksPath + 'other-qdgongyi-qr.png',
-                'name': '以爱之名-青岛公益行',
-                'href': 'http://qd.sina.com.cn/zt/qdgyx01/index.shtml'
-            }
-        ]
+            // {
+            //     'src': webBetterPath + '1-bainian.jpg',
+            //     'qr': webBetterPath + '1-bainian-qr.png',
+            //     'name': '百年青岛沧桑巨变',
+            //     'href': 'http://vip.qdxin.cn/h5/2019/qdhistory/'
+            // }
+        ],
     },
 ];
+
 
 // 设计作品
 var designPath = 'images/design/';

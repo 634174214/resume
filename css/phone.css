@@ -177,7 +177,7 @@ html,body{font-size: 16px;height:auto}
     flex: 0 0 80px;
     margin-bottom: 10px;
 }
- .info .myinfo .text{color:#fff;overflow: hidden;flex: 1;margin-bottom: 10px;}
+ .info .myinfo .text{color:#fff;overflow: hidden;flex: 1;margin-bottom: 0px;}
 
 .info .myinfo .school>.text p{line-height: 28px;display: flex;flex-flow: wrap;margin-bottom: 5px;}
 .info .myinfo .school>.text p span{display: inline-block;color: #72150E;font-weight: 700;}
@@ -231,6 +231,36 @@ html,body{font-size: 16px;height:auto}
     font-weight: normal;
 }
 
+.info .myinfo .myblog{
+    padding-bottom: 25px;
+}
+.info .myinfo .myblog .text{
+    display: flex;
+    flex-wrap: wrap;
+}
+.info .myinfo .myblog a{
+        flex: 0 0 50%;
+        color: #ffc107;
+        text-decoration: underline;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+        padding-left: 10px;
+        font-size: 16px;
+        margin-bottom: 10px;
+}
+.info .myinfo .myblog a::before{
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #ffc107;
+    top: 50%;
+    left: 0;
+    margin-top: -2px;
+}
 
 /* nav */
 .nav{width: 65vw;position: fixed;z-index: 101;left: 0;top: 0;bottom: 0;transform: translate3d(-100%,0,0);padding-right: 10px;transition: all 0.5s;}

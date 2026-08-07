@@ -286,7 +286,7 @@
             </div>
             <div class="contact">
                 电话：<strong class="main-color">150 6397 3659</strong><br>
-                邮箱：bin3656@aliyun.com<br>
+                邮箱：634174214@qq.com<br>
                 微信：w15063973659<br>
                 主页：<strong>https://634174214.github.io</strong>
             </div>
@@ -338,16 +338,12 @@
                 </dl>
                 <div class="qr-code-box">
                     <div class="qr-item">
-                        <div class="imgbox">
-                            <img src="img/mywx-qrcode.png" alt="微信二维码">
-                        </div>
-                        <p>微信二维码</p>
+                        <div class="imgbox" id="portfolio-qrcode"></div>
+                        <p>开发作品集</p>
                     </div>
                     <div class="qr-item">
-                        <div class="imgbox" id="resume-qrcode">
-                            
-                        </div>
-                        <p>在线简历二维码</p>
+                        <div class="imgbox" id="resume-qrcode"></div>
+                        <p>简历&设计作品</p>
                     </div>
                 </div>
             </div>
@@ -427,6 +423,11 @@
     <script>
         new QRCode(document.getElementById('resume-qrcode'), {
             text: 'https://634174214.github.io/resume/',
+            width: 100,
+            height: 100
+        });
+        new QRCode(document.getElementById('portfolio-qrcode'), {
+            text: 'https://634174214.github.io/portfolio/',
             width: 100,
             height: 100
         });

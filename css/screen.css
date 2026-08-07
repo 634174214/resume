@@ -209,6 +209,36 @@ abbr,acronym {
 .info .myinfo .school>.text p .school-check{color: #72150E;font-weight: 700;cursor: pointer;}
 .info .myinfo .school>.text p .school-check:hover{color: #ffc107;}
 
+.info .myinfo .myblog{
+    padding-bottom: 20px;
+}
+.info .myinfo .myblog a{
+        color: #72150E;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-block;
+        padding-right: 20px;
+        padding-left: 10px;
+        position: relative;
+}
+.info .myinfo .myblog a::before{
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #72150E;
+    top: 50%;
+    left: 0;
+    margin-top: -2px;
+}
+.info .myinfo .myblog a:hover{
+    color: #ffc107;
+}
+.info .myinfo .myblog a:hover::before{
+    background-color: #ffc107;
+}
+
 .info .myinfo .certificate>.text span{padding-right: 10px;}
 .info .myinfo .trait>.text{width: 830px;line-height: 36px;}
 .info .myinfo .trait>.text strong{

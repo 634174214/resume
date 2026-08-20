@@ -1,2246 +1,2647 @@
-var siteBaseUrl = window.location.href.split('index.html')[0];
+var siteBaseUrl = window.location.href.split("index.html")[0];
 
 var skills = {
-    frontend: {
-        name: '前端开发',
-        icon: '⚡',
-       items: ['JS/ES6+', 'Vue', 'TypeScript', 'Less', 'Tailwind CSS', 'Uni-app', '原生微信小程序', 'Element-UI', 'jQuery', 'Bootstrap', 'LayUI', '响应式开发', '兼容性处理']
-    },
-    backend: {
-        name: '后端开发',
-        icon: '⚙️',
-        items: ['PHP', 'MySQL', 'MongoDB', 'Python', 'Playwright(数据采集)', 'ThinkPHP', 'RESTful API', '数据安全防护', '原生PHP框架自建']
-    },
-    design: {
-        name: '设计能力',
-        icon: '✏️',
-        items: ['Photoshop', 'Illustrator', 'XD', 'Figma', 'InDesign', 'UI/UX设计', 'VI设计', '印刷品设计']
-    },
-    ai: {
-        name: 'AI / 新兴技术',
-        icon: '🤖',
-        items:  ['Python', 'Dify', 'Prompt调优', 'AI 插件/自定义工具开发', 'Agent工具调用 (Tool Calling)', '大模型API集成']
-    }
+  frontend: {
+    name: "前端开发",
+    icon: "⚡",
+    items: [
+      "JS/ES6+",
+      "Vue",
+      "TypeScript",
+      "Less",
+      "Tailwind CSS",
+      "Uni-app",
+      "原生微信小程序",
+      "Element-UI",
+      "jQuery",
+      "Bootstrap",
+      "LayUI",
+      "响应式开发",
+      "兼容性处理",
+    ],
+  },
+  backend: {
+    name: "后端开发",
+    icon: "⚙️",
+    items: [
+      "PHP",
+      "MySQL",
+      "MongoDB",
+      "Python",
+      "Playwright(数据采集)",
+      "ThinkPHP",
+      "RESTful API",
+      "数据安全防护",
+      "原生PHP框架自建",
+    ],
+  },
+  design: {
+    name: "设计能力",
+    icon: "✏️",
+    items: [
+      "Photoshop",
+      "Illustrator",
+      "XD",
+      "Figma",
+      "InDesign",
+      "UI/UX设计",
+      "VI设计",
+      "印刷品设计",
+    ],
+  },
+  ai: {
+    name: "AI / 新兴技术",
+    icon: "🤖",
+    items: [
+      "Python",
+      "Dify",
+      "Prompt调优",
+      "AI 插件/自定义工具开发",
+      "Agent工具调用 (Tool Calling)",
+      "大模型API集成",
+    ],
+  },
 };
 
 
+
+/**
+ * 从数组中随机抽取指定数量的不重复元素，优先保证 musthave: true 的项
+ * @param {Array} arr - 要处理的原始数组
+ * @param {number} count - 需要返回的元素个数
+ * @returns {Array} 包含不重复随机元素的新数组
+ */
+function getRandomItemsWithMusthave(arr, count) {
+    // 参数校验：确保第一个参数是数组
+    if (!Array.isArray(arr)) {
+        throw new TypeError('第一个参数必须是数组');
+    }
+    
+    // 参数校验：确保第二个参数是正整数
+    if (!Number.isInteger(count) || count < 0) {
+        throw new TypeError('第二个参数必须是非负整数');
+    }
+    
+    // 如果数组为空或count为0，直接返回空数组
+    if (arr.length === 0 || count === 0) {
+        return [];
+    }
+    
+    // 分离 musthave 项和非 musthave 项
+    const musthaveItems = arr.filter(item => item.musthave === true);
+    const normalItems = arr.filter(item => item.musthave !== true);
+    
+    // 如果 musthave 项的数量大于等于需要的数量
+    if (musthaveItems.length >= count) {
+        // 从 musthave 项中随机抽取 count 个
+        return shuffleArray([...musthaveItems]).slice(0, count);
+    }
+    
+    // 否则，先取所有 musthave 项
+    const result = [...musthaveItems];
+    
+    // 计算还需要从普通项中抽取的数量
+    const needCount = count - musthaveItems.length;
+    
+    // 如果普通项数量不足，则取全部普通项（并乱序）
+    if (normalItems.length <= needCount) {
+        result.push(...shuffleArray([...normalItems]));
+        return result;
+    }
+    
+    // 从普通项中随机抽取 needCount 个
+    const shuffledNormal = shuffleArray([...normalItems]);
+    result.push(...shuffledNormal.slice(0, needCount));
+    
+    return result;
+}
+
+/**
+ * 辅助函数：对数组进行完全乱序（Fisher-Yates算法）
+ * @param {Array} arr - 需要乱序的数组
+ * @returns {Array} 乱序后的新数组
+ */
+function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
 // 未上线项目二维码显示
-var notline = 'images/notline.jpg';
+var notline = "images/notline.jpg";
 // 前端推荐作品 数量<=3,要保证与tabs中的项目一一对应
-var webBetterPath = 'images/webbetter/';
+var webBetterPath = "images/webbetter/";
+var worksDir = {
+  h5: [
+    {
+      src: webBetterPath + "xin-spring-card.jpg",
+      qr: "",
+      name: "2024制作你的春节贺卡",
+      href: "https://vip.qdxin.cn/2024/card/index.html?id=spring",
+    },
+    {
+      src: webBetterPath + "1-vrqd.jpg",
+      qr: "",
+      name: "全景青岛，时尚走进生活",
+      href: "http://vr.qdxin.cn/topic/1904/",
+    },
+    {
+      src: webBetterPath + "ls-lvyou-book.jpg",
+      qr: "",
+      name: "青岛崂山区旅游指南",
+      href: "http://vip.qdxin.cn/h5/2018/lshandbook/",
+    },
+    {
+      src: webBetterPath + "qdwater.jpg",
+      qr: "",
+      name: "让市民喝上放心水",
+      href: "http://vip.qdxin.cn/h5/2019/qdwater/",
+    },
+    {
+      src: webBetterPath + "1-bainian.jpg",
+      qr: "",
+      name: "百年青岛沧桑巨变",
+      href: "http://vip.qdxin.cn/h5/2019/qdhistory/",
+    },
+    {
+      src: webBetterPath + "qianshou-mom.jpg",
+      qr: "",
+      name: "牵起最美的手 晒出对她的爱",
+      href: "https://634174214.github.io/portfolio/works/local/h5/qianshou-mom/",
+    },
+    {
+      src: webBetterPath + "lsvideovr.jpg",
+      qr: "",
+      name: "崂山城区·城载人文",
+      href: "http://vr.qdxin.cn/18/lsvideovr/",
+    },
+    {
+      src: webBetterPath + "qingyi0207.jpg",
+      qr: "",
+      name: "白衣仗剑 此生不换",
+      href: "http://vip.qdxin.cn/h5/2020/qingyi0207/",
+    },
+    {
+      src: webBetterPath + "meiliqd2018.jpg",
+      qr: "",
+      name: "美丽青岛 迎新春",
+      href: "http://vip.qdxin.cn/h5/2018/meiliqd2018/",
+    },
+    {
+      src: webBetterPath + "grand-xiaoyou.jpg",
+      qr: "",
+      name: "青岛格兰德中学校友会",
+      href: "https://634174214.github.io/portfolio/works/local/h5/qd-grand-xiaoyou/",
+    },
+    {
+      src: webBetterPath + "grand-gaokao.jpg",
+      qr: "",
+      name: "决胜高考，点亮梦想",
+      href: "https://634174214.github.io/portfolio/works/local/h5/2019grand-gaokao/",
+    },
+    {
+      src: webBetterPath + "qd-daiyan.jpg",
+      qr: "",
+      name: "青岛带盐人",
+      href: "https://634174214.github.io/portfolio/works/local/h5/qd-daiyan/",
+    },
+    {
+      src: webBetterPath + "qd-no3-70year.jpg",
+      qr: "",
+      name: "青岛三中70周年校庆",
+      href: "https://634174214.github.io/portfolio/works/local/h5/qd-no3-70year/",
+    },
+    {
+      src: webBetterPath + "qdsina-hotlove.jpg",
+      qr: "",
+      name: "热·爱|新浪青岛纪实H5",
+      href: "https://634174214.github.io/portfolio/works/local/h5/qdsina-hotlove/",
+    },
+    {
+      src: webBetterPath + "spring-colorful-qd.jpg",
+      qr: "",
+      name: "多彩青岛 新春旅游推荐季",
+      href: "https://634174214.github.io/portfolio/works/local/h5/spring-colorful-qd/",
+    },
+    {
+      src: webBetterPath + "bandao-24year.jpg",
+      qr: "",
+      name: "肆意生长 时刻追光",
+      href: "https://634174214.github.io/portfolio/works/local/h5/bandao-24year/",
+    },
+    {
+      src: webBetterPath + "buwanmei-yinyueguan.jpg",
+      qr: "",
+      name: "不完美音乐馆",
+      href: "https://634174214.github.io/portfolio/works/local/h5/buwanmei-yinyueguan/",
+    },
+    {
+      src: webBetterPath + "qdfangzhan0303.jpg",
+      qr: "",
+      name: "2020信网线上房展",
+      href: "http://vip.qdxin.cn/h5/2020/qdfangzhan0303/",
+    },
+  ],
+
+  webapp: [
+    {
+      src: webBetterPath + "4-elme.jpg",
+      // 没有qr链接会自动生成二维码
+      qr: "",
+      name: "Vue高仿饿了么",
+      href: "https://634174214.github.io/portfolio/works/local/webapp/myself-vue-elme/?id=123",
+    },
+    {
+      src: webBetterPath + "4-music.jpg",
+      qr: "",
+      name: "炸鸡音乐",
+      href: "https://wubin.infinityfreeapp.com/my-works/works/qqmusic-vue3/html/",
+    },
+    {
+      src: webBetterPath + "dify-article-law.jpg",
+      qr: "",
+      name: "“裁判文书”撰写新闻",
+      // href: 'https://ai2hinen9t1.thexin.cn/ai/article-law/'
+      href: "https://wubin.infinityfreeapp.com/my-works/works/dify-article-law/",
+    },
+    {
+      src: webBetterPath + "xin-zt-demo.jpg",
+      qr: "",
+      name: "信网专题",
+      href: "https://www.qdxin.cn/special/zt-app/app/?id=545",
+    },
+    {
+      src: webBetterPath + "4-yiqing.jpg",
+      qr: "",
+      name: "青岛肺炎疫情实时数据平台",
+      href: "http://vip.qdxin.cn/h5/2020/yiqing/?show",
+    },
+    {
+      src: webBetterPath + "xin-ps.jpg",
+      qr: "",
+      name: "信网创图-智能在线设计系统",
+      href: "https://ai2hinen9t1.thexin.cn/app/xin-ps/",
+    },
+    {
+      src: webBetterPath + "my-ns-wall.jpg",
+      qr: "",
+      name: "我的游戏墙",
+      href: "https://634174214.github.io/blog-others/my-ns-wall/index.html?localhost",
+    },
+    {
+      src: webBetterPath + "xin-smart-photo.jpg",
+      qr: "",
+      name: "信网智绘",
+     //   href: "https://wubin.infinityfreeapp.com/my-works/works/photo-smart/?i=1",
+      href: 'https://ai2hinen9t1.thexin.cn/ai/photo-smart/'
+    },
+    {
+      src: webBetterPath + "article-check-v28.jpg",
+      qr: "",
+      name: "信网稿件审校",
+     //   href: "https://wubin.infinityfreeapp.com/my-works/works/dify-article-check/?app_id=14",
+      href: 'https://ai2hinen9t1.thexin.cn/ai/article-check-v2.8/'
+    },
+    {
+      src: webBetterPath + "article-photo.jpg",
+      qr: "",
+      name: "新闻配图·智能提示词",
+     //   href: "https://wubin.infinityfreeapp.com/my-works/works/dify-article-input/?app_id=11",
+      href: 'https://ai2hinen9t1.thexin.cn/ai/article-photo/'
+    },
+    
+  ],
+
+  site: [
+    {
+      src: webBetterPath + "3-xinm.jpg",
+      qr: "",
+      // 必须出现
+      musthave: true,
+      name: "信网主站和手机版",
+      href: "https://www.qdxin.cn/",
+    },
+    {
+      src: webBetterPath + "xin-card.jpg",
+      qr: "",
+      name: "信网卡片海报系统",
+      href: "https://wubin.infinityfreeapp.com/my-works/works/xin-card/app/login.html",
+    },
+    {
+      src: webBetterPath + "live-qdxin.jpg",
+      qr: "",
+      name: "信网直播",
+      href: "http://live.qdxin.cn/",
+    },
+    {
+      src: webBetterPath + "xinxinxiangying-qdxin.jpg",
+      qr: "",
+      name: "信新相映",
+      href: "http://gongyi.qdxin.cn/",
+    },
+    {
+      src: webBetterPath + "3-xinziyuan.jpg",
+      qr: "",
+      name: "信网资源",
+      href: "https://www.qdxin.cn/ziyuan/",
+    },
+    {
+      src: webBetterPath + "4-qdlib.jpg",
+      qr: "",
+      name: "信网资源库",
+      href: 'https://ai2hinen9t1.thexin.cn/app/store/public/html/'
+    //   href: "https://wubin.infinityfreeapp.com/my-works/works/qd-pics-2025/app/html/?i=1#/home",
+    },
+    {
+      src: webBetterPath + "3-qdpiyao.jpg",
+      qr: "",
+      name: "青岛辟谣",
+      href: "https://piyao.qdxin.cn/",
+    },
+    {
+      src: webBetterPath + "see-qd-40year.jpg",
+      qr: "",
+      name: "瞰青岛 改革开发40年",
+      href: "http://vip.qdxin.cn/2018/seeqd1225/",
+    },
+    {
+      src: webBetterPath + "qd-caifu.jpg",
+      qr: "",
+      name: "2023青岛财富论坛",
+      href: "https://634174214.github.io/portfolio/works/local/h5/qd-caifu-luntan/",
+    },
+    {
+      src: webBetterPath + "hao-daohang.jpg",
+      qr: "",
+      name: "好工人网址导航",
+      href: "https://634174214.github.io/blog-others/hao/",
+    },
+    {
+      src: webBetterPath + "haier-sanyiniao.jpg",
+      qr: '',
+      name: "新房装修 旧房改造-海尔三翼鸟",
+      href: "http://vip.qdxin.cn/2021/haier/",
+    },
+    {
+      src: webBetterPath + "piyao2019.jpg",
+      qr: '',
+      name: "青岛辟谣2019年度总结",
+      href: "http://vip.qdxin.cn/h5/2019/piyao2019/",
+    },
+    {
+      src: webBetterPath + "map-vr-1905.jpg",
+      qr: "",
+      name: "青岛文化产业园全景地图",
+      href: "http://vr.qdxin.cn/topic/map-vr-1905/",
+    },
+    {
+      src: webBetterPath + "xin-video-fs.jpg",
+      qr: "",
+      name: "青岛视频（手机版）",
+      href: "https://v.qdxin.cn/video-fs/index.html",
+    },
+    {
+      src: webBetterPath + "dangjian-qdxin.jpg",
+      qr: "",
+      name: "信网党建频道",
+      href: "http://dangjian.qdxin.cn/",
+    },
+    {
+      src: webBetterPath + "xin-law.jpg",
+      qr: "",
+      name: "青岛信法网",
+      href: "https://law.qdxin.cn/",
+    },
+    {
+      src: webBetterPath + "xin-house.jpg",
+      qr: "",
+      name: "信网房产",
+      href: "https://house.qdxin.cn/",
+    },
+    {
+      src: webBetterPath + "faxian-qd.jpg",
+      qr: "",
+      name: "发现青岛数字版",
+      href: "http://faxian.qdxin.cn/",
+    },
+    // {
+    //   src: webBetterPath + "xin-vr.jpg",
+    //   qr: "",
+    //   name: "信网VR",
+    //   href: "http://vr.qdxin.cn/",
+    // },
+    {
+      src: webBetterPath + "jiankang-yangsheng.jpg",
+      qr: "",
+      name: "健康养生 医路同行",
+      href: "https://634174214.github.io/portfolio/works/local/web-pages/jiankang-vqdxin/",
+    },
+    {
+      src: webBetterPath + "chuanboli.jpg",
+      qr: "",
+      name: "信网传播力",
+      href: "https://www.qdxin.cn/about/chuanboli/",
+    },
+    {
+      src: webBetterPath + "xin-zt-huizong.jpg",
+      qr: "",
+      name: "信网新闻专题模板",
+      href: "https://634174214.github.io/portfolio/works/local/web-pages/xin-zt-huizong/zt/",
+    },
+    {
+      src: webBetterPath + "2023-piyao-huizong.jpg",
+      qr: "",
+      name: "辟谣信号站",
+      href: "http://vip.qdxin.cn/2023/piyao-huizong/index.html",
+    },
+  ],
+
+  game: [
+    {
+      src: webBetterPath + "game-piyao.jpg",
+      qr: "",
+      name: "辟谣游戏:动动手指,粉碎涉青谣言!",
+      href: "http://vip.qdxin.cn/h5/2022/piyao-yiqing/",
+    },
+    {
+      src: webBetterPath + "game-caishen.jpg",
+      qr: "",
+      name: "迎新春，接金币游戏",
+      href: "http://vip.qdxin.cn/vip/anli/pro/xin-games/games/jie-jb/",
+    },
+    {
+      src: webBetterPath + "game-suning.jpg",
+      qr: "",
+      name: "奔向苏宁不能停",
+      href: "http://vip.qdxin.cn/vip/anli/pro/xin-games/games/paoku26/",
+    },
+    {
+      src: webBetterPath + "qd-trash-sorting.jpg",
+      qr: "",
+      name: "垃圾分类 青岛在行动",
+      href: "https://634174214.github.io/portfolio/works/local/h5-game/qd-trash-sorting/",
+    },
+    {
+      src: webBetterPath + "ticai-chuangguan.jpg",
+      qr: "",
+      name: "青岛竞彩江湖高手闯关问卷",
+      href: "https://634174214.github.io/portfolio/works/local/h5-game/ticai-chuangguan/",
+    },
+    {
+      src: webBetterPath + "youkang_changing_game.jpg",
+      qr: "",
+      name: "定制一夏，由你做主！",
+      href: "https://634174214.github.io/portfolio/works/local/h5-game/youkang_changing_game/",
+    },
+    {
+      src: webBetterPath + "change.jpg",
+      qr: "",
+      name: "全民射嫦娥",
+      href: "http://vip.qdxin.cn/vip/anli/pro/xin-games/games/change/",
+    },
+    {
+      src: webBetterPath + "catch-zongzi.jpg",
+      qr: "",
+      name: "端午节一起来捉“粽”",
+      href: "https://634174214.github.io/portfolio/works/local/h5-game/catch-zongzi/",
+    },
+    {
+      src: webBetterPath + "fendou-jinli.jpg",
+      qr: "",
+      name: "2019奋斗吧锦鲤！",
+      href: "https://634174214.github.io/portfolio/works/local/h5-game/fendou-jinli/",
+    },
+    {
+      src: webBetterPath + "buerjia-zhua-tang.jpg",
+      qr: "",
+      name: "不二家疯狂糖果机",
+      href: "https://634174214.github.io/portfolio/works/local/h5-game/buerjia-zhua-tang/",
+    },
+    {
+      src: webBetterPath + "runman-buerjia.jpg",
+      qr: "",
+      name: "跟着不二家，快乐跑不停",
+      href: "https://634174214.github.io/portfolio/works/local/h5-game/runman-buerjia/",
+    },
+    {
+      src: webBetterPath + "2019-jineng.jpg",
+      qr: "",
+      name: "教你调制鸡尾酒",
+      href: "https://634174214.github.io/portfolio/works/local/h5-game/2019-jineng/",
+    },
+    {
+      src: webBetterPath + "38nvshen.jpg",
+      qr: "",
+      name: "沙雕男友成最强舔狗 | 38女神节",
+      href: "https://634174214.github.io/portfolio/works/local/h5-game/38nvshen/",
+    },
+  ],
+};
+
 var webBetter = [
-    {
-        'label': '网站 / WebApp',
-        'qrclickShow': false,
-        'data': [
-            {
-                'src': webBetterPath + '3-xinm.jpg',
-                'qr': '',
-                'name': '信网主站和手机版',
-                'href': 'https://www.qdxin.cn/'
-            },
-            {
-                'src': webBetterPath + 'xin-smart-photo.jpg',
-                'qr': '',
-                'name': '信网智绘',
-                'href': 'https://wubin.infinityfreeapp.com/my-works/works/photo-smart/?i=1'
-            },
-            {
-                'src': webBetterPath + 'xin-card.jpg',
-                'qr': '',
-                'name': '信网卡片海报系统',
-                'href': 'https://wubin.infinityfreeapp.com/my-works/works/xin-card/app/login.html'
-            },
-            // {
-            //     'src': webBetterPath + '3-qdpiyao.jpg',
-            //     'qr': webBetterPath + '3-qdpiyao-qr.png',
-            //     'name': '青岛辟谣',
-            //     'href': 'https://piyao.qdxin.cn/'
-            // },
-            // {
-            //     'src': webBetterPath + '3-dazong.jpg',
-            //     'qr': webBetterPath + '3-dazong-qr.png',
-            //     'name': '大宗新闻网',
-            //     'href': 'http://www.dazongnews.com/'
-            // },
-            // {
-            //     'src': webBetterPath + '3-yanyijituan.jpg',
-            //     'qr': webBetterPath + '3-yanyijituan-qr.png',
-            //     'name': '青岛演艺集团官方网站',
-            //     'href': 'http://www.qdyyjt.com/'
-            // }
-        ],
-    },
-    {
-        'label': 'Vue',
-        'qrclickShow': false,
-        'data': [
-            {
-                'src': webBetterPath + '4-elme.jpg',
-                // 没有qr链接会自动生成二维码
-                'qr': '',
-                'name': 'Vue高仿饿了么',
-                'href': 'https://634174214.github.io/portfolio/works/local/webapp/myself-vue-elme/?id=123'
-            },
-            {
-                'src': webBetterPath + '4-music.jpg',
-                'qr': '',
-                'name': '炸鸡音乐',
-                'href': 'https://wubin.infinityfreeapp.com/my-works/works/qqmusic-vue3/html/'
-            },
-            {
-                'src': webBetterPath + 'xin-zt-demo.jpg',
-                'qr': '',
-                'name': '信网专题',
-                'href': 'https://www.qdxin.cn/special/zt-app/app/?id=545'
-            }
-        ],
-    },
-    {
-        'label': 'APP / 小程序',
-        'qrclickShow': true,
-        'data': [
-            {
-                'src': webBetterPath + '6-xinhaoapp.jpg',
-                'qr': '',
-                'name': '信号新闻App',
-                'href': siteBaseUrl + 'download/xinhao-app.html'
-            },
-            // {
-            //     'src': webBetterPath + '2-ruiyuanxing.jpg',
-            //     'qr': webBetterPath + '2-ruiyuanxing-qr.png',
-            //     'name': '瑞源兴微信商城（前后台）',
-            //     'href': 'http://mp2.qdxin.cn/ps/ryx/index.php'
-            // },
-            // {
-            //     'src': webBetterPath + '2-xinxin.jpg',
-            //     'qr': webBetterPath + '2-xinxin-qr.png',
-            //     'name': '信新相映微信公益平台',
-            //     'href': 'http://mp2.qdxin.cn/gongyi/index.php'
-            // },
-            {
-                'src': webBetterPath + '5-xinnewsmini.jpg',
-                'qr': webBetterPath + '5-xinnewsmini-qr.jpg',
-                'name': '信网资讯小程序',
-                'href': 'javascript:;'
-            },
-            {
-                'src': webBetterPath + '5-piyaomini.jpg',
-                'qr': webBetterPath + '5-piyaomini-qr.jpg',
-                'name': '青岛网络辟谣平台小程序',
-                'href': 'javascript:;'
-            },
-            // {
-            //     'src': webBetterPath + '5-weichenmini.jpg',
-            //     'qr': webBetterPath + '5-weichenmini-qr.jpg',
-            //     'name': '微尘公益基金小程序',
-            //     'href': 'javascript:;'
-            // }
-            // {
-            //     'src': webBetterPath + '2-xinshop.jpg',
-            //     'qr': webBetterPath + '2-xinshop-qr.png',
-            //     'name': '信新相映积分商城（前后台）',
-            //     'href': 'http://mp2.qdxin.cn/gongyi/change.php'
-            // }
-        ],
-    },
-    {
-        'label': 'Game',
-        'qrclickShow': false,
-        'data': [
-             {
-                'src': webBetterPath + 'game-piyao.jpg',
-                'qr': '',
-                'name': '辟谣游戏:动动手指,粉碎涉青谣言!',
-                'href': 'http://vip.qdxin.cn/h5/2022/piyao-yiqing/'
-            },
-            {
-                'src': webBetterPath + 'game-caishen.jpg',
-                'qr': '',
-                'name': '迎新春，接金币游戏',
-                'href': 'http://vip.qdxin.cn/vip/anli/pro/xin-games/games/jie-jb/'
-            },
-            {
-                'src': webBetterPath + 'game-suning.jpg',
-                'qr': '',
-                'name': '奔向苏宁不能停',
-                'href': 'http://vip.qdxin.cn/vip/anli/pro/xin-games/games/paoku26/'
-            }
-        ],
-    },
-    {
-        'label': 'H5 ', // 项目标签名
-        'qrclickShow': false, // 手机版点击时，是否显示显示二维码， false=跳转到默认连接 true点击出现二维码
-        'data': [
-            {
-                'src': webBetterPath + 'xin-spring-card.jpg',
-                'qr': '',
-                'name': '2024制作你的春节贺卡',
-                'href': 'https://vip.qdxin.cn/2024/card/index.html?id=spring'
-            },
-            // {
-            //     'src': webBetterPath + '3-xinziyuan.jpg',
-            //     'qr': webBetterPath + '3-xinziyuan-qr.png',
-            //     'name': '信网资源',
-            //     'href': 'https://www.qdxin.cn/ziyuan/'
-            // },
-            {
-                'src': webBetterPath + '4-yiqing.jpg',
-                'qr': '',
-                'name': '青岛肺炎疫情实时数据平台',
-                'href': 'http://vip.qdxin.cn/h5/2020/yiqing/?show'
-            },
-            {
-                'src': webBetterPath + '1-vrqd.jpg',
-                'qr': '',
-                'name': '全景青岛，时尚走进生活',
-                'href': 'http://vr.qdxin.cn/topic/1904/'
-            },
-            // {
-            //     'src': webBetterPath + '1-bainian.jpg',
-            //     'qr': webBetterPath + '1-bainian-qr.png',
-            //     'name': '百年青岛沧桑巨变',
-            //     'href': 'http://vip.qdxin.cn/h5/2019/qdhistory/'
-            // }
-        ],
-    },
+  {
+    label: "网站 / 网页",
+    qrclickShow: false,
+    data: getRandomItemsWithMusthave(worksDir.site, 3),
+  },
+  {
+    label: "WebApp",
+    qrclickShow: false,
+    data: getRandomItemsWithMusthave(worksDir.webapp, 3),
+  },
+  {
+    label: "APP / 小程序",
+    qrclickShow: true,
+    data: [
+      {
+        src: webBetterPath + "6-xinhaoapp.jpg",
+        qr: "",
+        name: "信号新闻App",
+        href: siteBaseUrl + "download/xinhao-app.html",
+      },
+      // {
+      //     'src': webBetterPath + '2-ruiyuanxing.jpg',
+      //     'qr': webBetterPath + '2-ruiyuanxing-qr.png',
+      //     'name': '瑞源兴微信商城（前后台）',
+      //     'href': 'http://mp2.qdxin.cn/ps/ryx/index.php'
+      // },
+      // {
+      //     'src': webBetterPath + '2-xinxin.jpg',
+      //     'qr': webBetterPath + '2-xinxin-qr.png',
+      //     'name': '信新相映微信公益平台',
+      //     'href': 'http://mp2.qdxin.cn/gongyi/index.php'
+      // },
+      {
+        src: webBetterPath + "5-xinnewsmini.jpg",
+        qr: webBetterPath + "5-xinnewsmini-qr.jpg",
+        name: "信网资讯小程序",
+        href: "javascript:;",
+      },
+      {
+        src: webBetterPath + "5-piyaomini.jpg",
+        qr: webBetterPath + "5-piyaomini-qr.jpg",
+        name: "青岛网络辟谣平台小程序",
+        href: "javascript:;",
+      },
+      // {
+      //     'src': webBetterPath + '5-weichenmini.jpg',
+      //     'qr': webBetterPath + '5-weichenmini-qr.jpg',
+      //     'name': '微尘公益基金小程序',
+      //     'href': 'javascript:;'
+      // }
+      // {
+      //     'src': webBetterPath + '2-xinshop.jpg',
+      //     'qr': webBetterPath + '2-xinshop-qr.png',
+      //     'name': '信新相映积分商城（前后台）',
+      //     'href': 'http://mp2.qdxin.cn/gongyi/change.php'
+      // }
+    ],
+  },
+  {
+    label: "Game",
+    qrclickShow: false,
+    data: getRandomItemsWithMusthave(worksDir.game, 3),
+  },
+  {
+    label: "H5 ", // 项目标签名
+    qrclickShow: false, // 手机版点击时，是否显示显示二维码， false=跳转到默认连接 true点击出现二维码
+    data: getRandomItemsWithMusthave(worksDir.h5, 3),
+  },
 ];
 
-
 // 设计作品
-var designPath = 'images/design/';
+var designPath = "images/design/";
 var designWorks = [
-    {
-        'label':   '少儿科技节海报',
-        'desc':    '青岛格兰德小学第五届科技节海报',
-        'show': designPath + 'grang-keji-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'grang-keji-h-1.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-{
-    'label':   '信号新闻app介绍',
-    'desc':    '信号新闻app引导介绍下载页面的PC版和手机版',
-    'show': designPath + 'xinhaoapp-show-1.png',
-    'images':  [
-        {
-            'src': designPath + 'xinhaoapp-show-1.png',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xinhaoapp-show-2.png',
-            'isvertical' : true
-        }
-    ]
-},
-{
-    'label':   '信号新闻APP',
-    'desc':    '信号新闻APP设计稿',
-    'show': designPath + 'xin-app/0.jpg',
-    'images':  [
-        {
-            'src': designPath + 'xin-app/0.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/0-2.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/1-1.png',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/1-2.png',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/2-1.png',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/2-2.png',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/2-3.png',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/2-4.png',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/3-1.png',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/4-1.png',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/5-1.png',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/6-1.png',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/7-1.png',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/7-2.png',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'xin-app/8-1.png',
-            'isvertical' : true
-        }
-    ]
-},
-{
-    'label':   '三翼鸟&卡萨帝',
-    'desc':    '海尔三翼鸟-卡萨帝舒适中国家海报',
-    'show': designPath + 'h-sanyiniao202209.jpg',
-    'images':  [
-        {
-            'src': designPath + 'h-sanyiniao202209.jpg',
-            'isvertical' : false
-        }
-    ]
-},
-{
-    'label':   '融创水世界',
-    'desc':    '东方影都-奇趣海岛节海报',
-    'show': designPath + 'yingdu-c-1.jpg',
-    'images':  [
-        {
-            'src': designPath + 'yingdu-c-1.jpg',
-            'isvertical' : true
-        }
-    ]
-},
-{
-    'label':   '森林公园地产海报',
-    'desc':    '美好，如森林生长',
-    'show': designPath + 'senlin-20220801.jpg',
-    'images':  [
-        {
-            'src': designPath + 'senlin-20220801.jpg',
-            'isvertical' : false
-        }
-    ]
-},
-{
-    'label':   '建安控股宣传动图',
-    'desc':    '用于建安控股微信公众号',
-    'show': designPath + 'jianan-wx-bot.gif',
-    'images':  [
-        {
-            'src': designPath + 'jianan-wx-bot.gif',
-            'isvertical' : false
-        }
-    ]
-},
-{
-    'label':   '图解政府工作报告-2022年市北区重点工作',
-    'desc':    '宣传长图设计',
-    'show': designPath + 'h-2022shibei-full.jpg',
-    'images':  [
-        {
-            'src': designPath + 'h-2022shibei-1.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'h-2022shibei-2.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'h-2022shibei-3.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'h-2022shibei-full.jpg',
-            'isvertical' : true
-        }
-    ]
-},
-    {
-        'label':   '首户e贷-农行海报设计',
-        'desc':    '中国农业银行首户e贷宣传专题-海报设计',
-        'show': designPath + 'h-nongbank-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'h-nongbank-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'h-nongbank-2.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-{
-    'label':   '禁烟花大屏宣传海报',
-    'desc':    '2022青岛地铁大厦禁烟花大屏宣传海报设计',
-    'show': designPath + 'jinfang-p-2.jpg',
-    'images':  [
-        {
-            'src': designPath + 'jinfang-p-3.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'jinfang-p-2.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'jinfang-p-1.jpg',
-            'isvertical' : false
-        }
-    ]
-},
-{
-    'label':   '云上打卡-最美海岸线',
-    'desc':    'H5专题海报设计',
-    'show': designPath + 'zuimei-h-1.jpg',
-    'images':  [
-        {
-            'src': designPath + 'zuimei-h-1.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'zuimei-h-2.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'zuimei-h-3.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'zuimei-h-4.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'zuimei-h-5.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'zuimei-h-6.jpg',
-            'isvertical' : true
-        }
-    ]
-},
-{
-    'label':   '爱市北看两会',
-    'desc':    '2022市北区两会宣传展板设计',
-    'show': designPath + '2022lianghui-p-1.jpg',
-    'images':  [
-        {
-            'src': designPath + '2022lianghui-p-1.jpg',
-            'isvertical' : true
-        }
-    ]
-},
-{
-    'label':   '青岛2022禁放烟花爆竹海报',
-    'desc':    '青岛地区禁放烟花爆竹公益宣传海报设计',
-    'show': designPath + 'h-2022-baozhu2.jpg',
-    'images':  [
-        {
-            'src': designPath + 'h-2022-baozhu1.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'h-2022-baozhu2.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'h-2022-baozhu3.jpg',
-            'isvertical' : true
-        },
-        {
-            'src': designPath + 'h-2022-baozhu4.jpg',
-            'isvertical' : true
-        }
-    ]
-},
-{
-    'label':   '青岛中信银行30周年Logo',
-    'desc':    '青岛中信银行30周年Logo设计',
-    'show': designPath + 'qd-zhongxin-30years.jpg',
-    'images':  [
-        {
-            'src': designPath + 'qd-zhongxin-30years.jpg',
-            'isvertical' : true
-        }
-    ]
-},
-{
-    'label':   '融创文旅双11潮乐GO',
-    'desc':    '融创文旅双11潮乐GO节广告海报设计',
-    'show': designPath + 'yingdu-202111.jpeg',
-    'images':  [
-        {
-            'src': designPath + 'yingdu-202111.jpeg',
-            'isvertical' : false
-        }
-    ]
-},
-{
-    'label':   '极地海洋公园-海洋节海报',
-    'desc':    '青岛海昌极地海洋公园-冰GO海洋节海报',
-    'show': designPath + 'jidi-haiyang.jpg',
-    'images':  [
-        {
-            'src': designPath + 'jidi-haiyang.jpg',
-            'isvertical' : true
-        }
-    ]
-},
-{
-    'label':   '和达集团大城双11海报设计',
-    'desc':    '和达11月嗨玩计划，双11广告海报设计',
-    'show': designPath + 'heda-20211.jpeg',
-    'images':  [
-        {
-            'src': designPath + 'heda-20211.jpeg',
-            'isvertical' : false
-        }
-    ]
-},
+  {
+    label: "少儿科技节海报",
+    desc: "青岛格兰德小学第五届科技节海报",
+    show: designPath + "grang-keji-h-1.jpg",
+    images: [
+      {
+        src: designPath + "grang-keji-h-1.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "信号新闻app介绍",
+    desc: "信号新闻app引导介绍下载页面的PC版和手机版",
+    show: designPath + "xinhaoapp-show-1.png",
+    images: [
+      {
+        src: designPath + "xinhaoapp-show-1.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xinhaoapp-show-2.png",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "信号新闻APP",
+    desc: "信号新闻APP设计稿",
+    show: designPath + "xin-app/0.jpg",
+    images: [
+      {
+        src: designPath + "xin-app/0.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/0-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/1-1.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/1-2.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/2-1.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/2-2.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/2-3.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/2-4.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/3-1.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/4-1.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/5-1.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/6-1.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/7-1.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/7-2.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-app/8-1.png",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "三翼鸟&卡萨帝",
+    desc: "海尔三翼鸟-卡萨帝舒适中国家海报",
+    show: designPath + "h-sanyiniao202209.jpg",
+    images: [
+      {
+        src: designPath + "h-sanyiniao202209.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "融创水世界",
+    desc: "东方影都-奇趣海岛节海报",
+    show: designPath + "yingdu-c-1.jpg",
+    images: [
+      {
+        src: designPath + "yingdu-c-1.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "森林公园地产海报",
+    desc: "美好，如森林生长",
+    show: designPath + "senlin-20220801.jpg",
+    images: [
+      {
+        src: designPath + "senlin-20220801.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "建安控股宣传动图",
+    desc: "用于建安控股微信公众号",
+    show: designPath + "jianan-wx-bot.gif",
+    images: [
+      {
+        src: designPath + "jianan-wx-bot.gif",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "图解政府工作报告-2022年市北区重点工作",
+    desc: "宣传长图设计",
+    show: designPath + "h-2022shibei-full.jpg",
+    images: [
+      {
+        src: designPath + "h-2022shibei-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "h-2022shibei-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "h-2022shibei-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "h-2022shibei-full.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "首户e贷-农行海报设计",
+    desc: "中国农业银行首户e贷宣传专题-海报设计",
+    show: designPath + "h-nongbank-1.jpg",
+    images: [
+      {
+        src: designPath + "h-nongbank-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "h-nongbank-2.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "禁烟花大屏宣传海报",
+    desc: "2022青岛地铁大厦禁烟花大屏宣传海报设计",
+    show: designPath + "jinfang-p-2.jpg",
+    images: [
+      {
+        src: designPath + "jinfang-p-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "jinfang-p-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "jinfang-p-1.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "云上打卡-最美海岸线",
+    desc: "H5专题海报设计",
+    show: designPath + "zuimei-h-1.jpg",
+    images: [
+      {
+        src: designPath + "zuimei-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "zuimei-h-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "zuimei-h-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "zuimei-h-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "zuimei-h-5.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "zuimei-h-6.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "爱市北看两会",
+    desc: "2022市北区两会宣传展板设计",
+    show: designPath + "2022lianghui-p-1.jpg",
+    images: [
+      {
+        src: designPath + "2022lianghui-p-1.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "青岛2022禁放烟花爆竹海报",
+    desc: "青岛地区禁放烟花爆竹公益宣传海报设计",
+    show: designPath + "h-2022-baozhu2.jpg",
+    images: [
+      {
+        src: designPath + "h-2022-baozhu1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "h-2022-baozhu2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "h-2022-baozhu3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "h-2022-baozhu4.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "青岛中信银行30周年Logo",
+    desc: "青岛中信银行30周年Logo设计",
+    show: designPath + "qd-zhongxin-30years.jpg",
+    images: [
+      {
+        src: designPath + "qd-zhongxin-30years.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "融创文旅双11潮乐GO",
+    desc: "融创文旅双11潮乐GO节广告海报设计",
+    show: designPath + "yingdu-202111.jpeg",
+    images: [
+      {
+        src: designPath + "yingdu-202111.jpeg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "极地海洋公园-海洋节海报",
+    desc: "青岛海昌极地海洋公园-冰GO海洋节海报",
+    show: designPath + "jidi-haiyang.jpg",
+    images: [
+      {
+        src: designPath + "jidi-haiyang.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "和达集团大城双11海报设计",
+    desc: "和达11月嗨玩计划，双11广告海报设计",
+    show: designPath + "heda-20211.jpeg",
+    images: [
+      {
+        src: designPath + "heda-20211.jpeg",
+        isvertical: false,
+      },
+    ],
+  },
 
-{
-        'label':   '信网H5卡片系统后台UI设计',
-        'desc':    '独立完成从设计到全栈开发搭建的一个项目',
-        'show': designPath + 'cardback-h-1.png',
-        'images':  [
-            {
-                'src': designPath + 'cardback-h-1.png',
-                'isvertical' : true
-            }
-        ]
-    },
-{
-        'label':   '海尔三翼鸟厨房的奇妙之旅',
-        'desc':    '海尔三翼鸟厨房装修用户权益、装修产品介绍海报',
-        'show': designPath + 'sanyiniai-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'sanyiniai-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'sanyiniai-c-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'sanyiniai-c-3.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-{
-        'label':   '海尔三翼鸟五一装修征集',
-        'desc':    '海尔三翼鸟装修H5专题',
-        'show': designPath + 'sanyiniao-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'sanyiniao-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'sanyiniao-h-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'sanyiniao-h-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'sanyiniao-h-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'sanyiniao-h-5.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-{
-        'label':   '信网专题设计',
-        'desc':    '信网单页专题设计（前台界面）',
-        'show': designPath + 'xin-vuezt-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'xin-vuezt-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'xin-vuezt-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'xin-vuezt-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'xin-vuezt-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'xin-vuezt-5.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'xin-vuezt-6.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
- {
-        'label':   '一介武夫网站 | 前台',
-        'desc':    '一介武夫网站前台页面设计',
-        'show': designPath + 'my-blog-2.jpg',
-        'images':  [
-            {
-                'src': designPath + 'my-blog-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'my-blog-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'my-blog-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'my-blog-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'my-blog-5.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'my-blog-6.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'my-blog-7.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'my-blog-8.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'my-blog-9.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '一介武夫网站 | 后台',
-        'desc':    '一介武夫网站后台界面peice-ui设计',
-        'show': designPath + 'my-pieceui-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'my-pieceui-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'my-pieceui-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'my-pieceui-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'my-pieceui-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'my-pieceui-5.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'my-pieceui-6.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        // 作品名称
-        'label':   '台湾展会邀请函',
-        // 作品描述
-        'desc':    '台湾医疗器械展邀请函',
-        // 瀑布流展示图
-        'show': designPath + 'yao-taiwan-1.jpg',
-        'images':  [
-            {
-                // 图片src
-                'src': designPath + 'yao-taiwan-1.jpg',
-                // 图片是否纵向 是true
-                'isvertical' : false
-            },
-            {
-                // 图片src
-                'src': designPath + 'yao-taiwan-2.jpg',
-                // 图片是否纵向 是true
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '极地海洋世界广告',
-        'desc':    '2020年国庆节期间极地海洋世界广告设计',
-        'show': designPath + '2020jidi-h.jpg',
-        'images':  [
-            {
-                'src': designPath + '2020jidi-h.jpg',
-                'isvertical' : false
-            }
-
-        ]
-    },
-    {
-        'label':   '2012深圳会邀请函',
-        'desc':    '2012年深圳第67届医疗器械展会邀请函',
-        'show': designPath + 'yao-shenzhen-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'yao-shenzhen-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'yao-shenzhen-2.jpg',
-                'isvertical' : true
-            }
-
-        ]
-    },
-    {
-        'label':   '济南医疗展会邀请函',
-        'desc':    '2011济南第26届秋季医疗器械展会邀请函',
-        'show': designPath + 'jinan201107-y.jpg',
-        'images':  [
-            {
-                'src': designPath + 'jinan201107-y.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '济南医疗展会会刊跨页广告、喷绘',
-        'desc':    '2011年济南秋季医疗展会会刊跨页广告、展会装饰喷绘',
-        'show': designPath + 'jinan201107-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'jinan201107-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'jinan201107-c-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'jinan201107-p-1.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '2012济南医疗器械展-邀请函',
-        'desc':    '2012年第28届济南医疗器械展邀请函',
-        'show': designPath + 'jinan201209-y-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'jinan201209-y-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'jinan201209-y-2.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '2012济南医疗器械展喷绘',
-        'desc':    '2012年第28届济南医疗器械展展位以及展位装饰喷绘',
-        'show': designPath + 'jinan201209-p-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'jinan201209-p-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'jinan201209-p-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'jinan201209-p-3.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   'HOLOGIC乳腺X光机广告',
-        'desc':    'HOLOGIC乳腺X光机展会KT板',
-        'show': designPath + 'yantai2012-p-2.jpg',
-        'images':  [
-            {
-                'src': designPath + 'yantai2012-p-2.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '烟台西门子新品发布会',
-        'desc':    '邀请函、喷绘、晚宴抽奖券等',
-        'show': designPath + 'yantai2012-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'yantai2012-c-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'yantai2012-p-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'yantai2012-y.jpg',
-                'isvertical' : false
-            }
-
-        ]
-    },
-    {
-        'label':   '日立靶中心CT产品发布会',
-        'desc':    '会议引导牌、发布会幕布、晚宴幕布、会议效果图',
-        'show': designPath + 'rili2012-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'rili2012-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'rili2012-p-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'rili2012-p-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'rili2012-p-3.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '日立ECLOS靶中心CT-X展架',
-        'desc':    '日立CT-X展架设计（设计需要遵循日立公司既有的设计规范）',
-        'show': designPath + 'riliECLOS-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'riliECLOS-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'riliECLOS-c-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'riliECLOS-c-3.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '日立靶中心CT产品发布会',
-        'desc':    '日立靶中心CT产品发布会-邀请函',
-        'show': designPath + 'rili2012-y-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'rili2012-y-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'rili2012-y-2.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '日立广州会-邀请函',
-        'desc':    '2013年8月广州弧形臂平板胃肠机技术研讨会-邀请函',
-        'show': designPath + 'riligzhou-y-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'riligzhou-y-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'riligzhou-y-2.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '日立广州会-喷绘',
-        'desc':    '2013年8月广州弧形臂平板胃肠机技术研讨会-喷绘（茶歇、签到、晚宴）',
-        'show': designPath + 'riligzhou-p-3.jpg',
-        'images':  [
-            {
-                'src': designPath + 'riligzhou-p-3.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'riligzhou-p-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'riligzhou-x-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'riligzhou-p-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'riligzhou-x-2.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '日立广州会-其他物料',
-        'desc':    '2013年8月广州弧形臂平板胃肠机技术研讨会-午餐券、入住券、矿泉水瓶贴、入住欢迎卡',
-        'show': designPath + 'riligzhou-c-2.jpg',
-        'images':  [
-            {
-                'src': designPath + 'riligzhou-c-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'riligzhou-c-3.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'riligzhou-c-4.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'riligzhou-c-5.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'riligzhou-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'riligzhou-x-4.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '2013摄情画意挂历',
-        'desc':    '曾任青岛市摄影家协会副主席孙其光先生-2013年摄影集挂历',
-        'show': designPath + '2013guali-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + '2013guali-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + '2013guali-c-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + '2013guali-c-3.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '厦门医疗展会邀请函',
-        'desc':    '2013年11月第70届中国国际医疗器械（秋季）博览会邀请函',
-        'show': designPath + 'xiamen2013-y-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'xiamen2013-y-1.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '飞利浦磁共振宣传册',
-        'desc':    '安丘中心医院飞利浦核磁共振产品宣传册，其中设备图片均为实景拍摄',
-        'show': designPath + 'anqiuci-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'anqiuci-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'anqiuci-c-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'anqiuci-c-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'anqiuci-c-4.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '安丘中心医院MRI宣传册',
-        'desc':    '安丘市中心医院MRI宣传册内容更新、设计更换',
-        'show': designPath + 'anqiuci2-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'anqiuci2-c-5.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'anqiuci2-c-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'anqiuci2-c-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'anqiuci2-c-3.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'anqiuci2-c-4.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '安丘中心医院MRI物料',
-        'desc':    '安丘市中心医院磁共振科室灯箱、胶片袋、引导牌等',
-        'show': designPath + 'anqiuci-show2.jpg',
-        'images':  [
-            {
-                'src': designPath + 'anqiuci-p-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'anqiuci-p-5.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'anqiuci-p-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'anqiuci-p-3.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'anqiuci-p-4.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'anqiuci-c-5.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '城阳北后楼摄影集',
-        'desc':    '城阳北后楼社区摄影集设计',
-        'show': designPath + 'beihoulou-c-2.jpg',
-        'images':  [
-            {
-                'src': designPath + 'beihoulou-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'beihoulou-c-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'beihoulou-c-3.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'beihoulou-c-4.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '崂山养生茶包装设计',
-        'desc':    '奇光溢彩文化有限公司出品的崂山养生茶包装设计方案',
-        'show': designPath + 'lscha-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'lscha-c-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'lscha-c-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'lscha-c-3.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'lscha-c-4.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'lscha-c-5.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'lscha-c-6.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'lscha-c-7.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'lscha-c-8.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '崂山养生茶包装方案2',
-        'desc':    '奇光溢彩文化有限公司出品的崂山养生茶包装设计方案2',
-        'show': designPath + 'lscha-c-9.jpg',
-        'images':  [
-            {
-                'src': designPath + 'lscha-c-9.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '成都医疗展会邀请函',
-        'desc':    '2012年第68届中国国际医疗器械秋季博览会（成都）邀请函设计',
-        'show': designPath + 'chengdu2012-y-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'chengdu2012-y-1.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '程云阁香品堂三折页',
-        'desc':    '程云阁香品堂三折页设计,净尺寸28.5cm * 21cm',
-        'show': designPath + 'chengyunge-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'chengyunge-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'chengyunge-c-2.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '程云阁香品堂VI设计',
-        'desc':    '程云阁香品堂VI设计，包括品牌logo、名片、信封信纸、香品包装设计等',
-        'show': designPath + 'chengyunge-showv.jpg',
-        'images':  [
-            {
-                'src': designPath + 'chengyunge-v-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'chengyunge-v-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'chengyunge-v-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'chengyunge-v-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'chengyunge-v-5.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'chengyunge-v-6.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'chengyunge-v-7.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '新浪年度风尚温度H5设计',
-        'desc':    '新浪“风尚温度”主题晚会H5,涵盖了如微博八点档等等年度多个主题项目',
-        'show': designPath + 'wendu-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'wendu-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'wendu-h-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'wendu-h-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'wendu-h-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'wendu-h-5.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'wendu-h-6.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'wendu-h-7.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '福建淘宝旅游线路四折页',
-        'desc':    '福建摄影、探索、休闲、收藏四条旅游线路进行介绍、推荐',
-        'show': designPath + 'fujian2011-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'fujian2011-c-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'fujian2011-c-2.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '日立平板胃肠研讨会邀请函',
-        'desc':    '日立弧形臂平板胃肠CUREVISTA技术研讨会邀请函,采用上下对折的设计',
-        'show': designPath + 'huangdao2011-y-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'huangdao2011-y-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'huangdao2011-y-2.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '日立平板胃肠研讨会物料',
-        'desc':    '日立弧形臂平板胃肠CUREVISTA技术研讨会现场会议幕布喷绘、以及晚宴抽奖券的设计',
-        'show': designPath + 'huangdao2011-p-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'huangdao2011-p-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'huangdao2011-p-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'huangdao2011-c-1.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '优耐特超市logo设计',
-        'desc':    '古早文化城优耐特超市logo设计',
-        'show': designPath + 'younaite-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'younaite-c-1.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '德国烤瓷牙宣传册',
-        'desc':    '霍特曼恒晖（青岛）烤瓷牙宣传册设计，包括宣传册中的烤瓷牙产品拍摄到后期产品图片处理设计',
-        'show': designPath + 'jiaya-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'jiaya-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'jiaya-c-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'jiaya-c-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'jiaya-c-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'jiaya-c-5.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '海云庵、糖球会明信片',
-        'desc':    '海云庵、糖球会明信片设计展示老青岛的人文风貌,一套12张仅取部分展示',
-        'show': designPath + 'mingxinp-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'mingxinp-c-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'mingxinp-c-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'mingxinp-c-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'mingxinp-c-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'mingxinp-c-5.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '青岛记忆水彩画明信片',
-        'desc':    '青岛记忆-老青岛水彩画明信片，采用孙其光先生描绘老青岛各个景点的画作，领略老青岛的魅力,这里展示明信片的包装、明信片的正反面设计',
-        'show': designPath + 'qdjiyi-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'qdjiyi-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'qdjiyi-c-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'qdjiyi-c-3.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'qdjiyi-c-4.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '孙其光水彩画册',
-        'desc':    '负责孙其光先生水彩画集装帧设计、画册排版',
-        'show': designPath + 'sqghuace-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'sqghuace-c-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'sqghuace-c-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'sqghuace-c-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'sqghuace-c-4.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '红木缘宣传单页',
-        'desc':    '崂山红木文化街初期宣传单页',
-        'show': designPath + 'hongmudm-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'hongmudm-c-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'hongmudm-c-2.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '红木文化街一期宣传单',
-        'desc':    '红木文化街宣传初期的宣传单',
-        'show': designPath + 'guzaodm-c-3.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzaodm-c-3.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '红木文化街一期宣传单',
-        'desc':    '红木文化街宣传初期的宣传单',
-        'show': designPath + 'guzaodm-c-2.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzaodm-c-2.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '红木文化街一期登报广告',
-        'desc':    '红木文化街一期宣传时于青岛晚报投放的广告',
-        'show': designPath + 'guzaobz-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzaobz-c-1.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '古早文化艺术节设计',
-        'desc':    '古早文化艺术节邀请函、礼品券、宣传海报、参观券等设计',
-        'show': designPath + 'guzaojie-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzaojie-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'guzaojie-c-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'guzaojie-c-3.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'guzaojie-c-4.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'guzaojie-c-5.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'guzaojie-c-6.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '古早文化城晚报广告',
-        'desc':    '古早文化城晚报投放广告设计',
-        'show': designPath + 'guzaobz-c-2.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzaobz-c-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'guzaobz-c-7.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '古早文化城画报广告（一）',
-        'desc':    '古早文化城画报广告一期投放',
-        'show': designPath + 'guzaobz-c-3.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzaobz-c-3.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '古早文化城画报广告（二）',
-        'desc':    '古早文化城画报广告二期投放',
-        'show': designPath + 'guzaobz-c-4.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzaobz-c-4.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '古早文化城画报广告（三）',
-        'desc':    '古早文化城画报广告三期投放',
-        'show': designPath + 'guzaobz-c-5.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzaobz-c-5.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '古早文化城画报广告（四）',
-        'desc':    '古早文化城画报广告四期投放，跨页广告',
-        'show': designPath + 'guzaobz-c-6.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzaobz-c-6.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '古早文化城招商海报',
-        'desc':    '古早文化城招商海报（正反面）',
-        'show': designPath + 'guzaodm-c-5.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzaodm-c-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'guzaodm-c-5.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '古早文化城宣传单页',
-        'desc':    '古早文化城宣传四折单页，采用斜切式设计，在正面进行折叠时，可以显示出目录',
-        'show': designPath + 'guzaodm-c-6-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzaodm-c-6.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'guzaodm-c-7.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '古早文化城招商手册',
-        'desc':    '古古早文化城招商手册，封面采用特殊纸张（红色）+ 烫金，内容为介绍文化城内各个业态，以及提供的服务项目等，篇幅原因此处仅取个别页进行展示',
-        'show': designPath + 'hmuce-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'hmuce-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'hmuce-c-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'hmuce-c-3.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'hmuce-c-4.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'hmuce-c-5.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'hmuce-c-6.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '古早文化城VI（一）',
-        'desc':    '古古早文化城VI设计-基本组合',
-        'show': designPath + 'guzao-v-show1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzao-v-logo.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'guzao-v-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'guzao-v-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'guzao-v-3.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '古早文化城VI（二）',
-        'desc':    '古古早文化城VI设计-衍生产品',
-        'show': designPath + 'guzao-v-show2.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzao-v-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'guzao-v-5.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'guzao-v-6.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'guzao-v-7.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '古早文化城VI（三）',
-        'desc':    '古古早文化城VI设计-商场标识',
-        'show': designPath + 'guzao-v-show3.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guzao-v-8.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'guzao-v-9.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'guzao-v-10.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'guzao-v-11.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'guzao-v-12.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '枇杷派H5-被炒风险检测',
-        'desc':    '枇杷派H5-被炒风险设计文件，通过疯狂点击左右图片按键来进行游戏',
-        'show': designPath + 'pipapai-h-show1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'pipapai-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'pipapai-h-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'pipapai-h-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'pipapai-h-4.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '孤独症患者',
-        'desc':    '枇杷派H5-孤独症患者，选择检测类H5设计，对即将毕业的大学生进行就业检测，推荐枇杷派招聘APP,仅截取部分页面展示',
-        'show': designPath + 'pipapai-h-show2.jpg',
-        'images':  [
-            {
-                'src': designPath + 'pipapai-h-5.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'pipapai-h-6.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'pipapai-h-7.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'pipapai-h-8.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label':   '枇杷派全国校园行',
-        'desc':    '枇杷派全国校园行邀请函设计',
-        'show': designPath + 'pipapai-y-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'pipapai-y-1.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label':   '车阵吧公众号宣传',
-        'desc':    '微信车阵吧公众号活动旗帜、公众号引导图',
-        'show': designPath + 'chezhen-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'chezhen-c-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'chezhen-c-2.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '青岛眼科医院专题',
-        'desc':  '新浪青岛-青岛眼科医院专题头图、专题设计',
-        'show': designPath + 'yanke-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'yanke-h-1.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '金家岭互联网金融高峰论坛',
-        'desc':  '第二届金家岭互联网金融高峰论坛专题宣传长图设计,篇幅所限仅节选部分展示',
-        'show': designPath + 'ejinrong-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'ejinrong-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'ejinrong-h-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'ejinrong-h-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'ejinrong-h-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'ejinrong-h-5.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '奔向麦凯乐H5游戏',
-        'desc':  '奔向麦凯乐H5游戏界面设计、以及进行开发,游戏中素材均做切图处理，此处不做展示',
-        'show': designPath + 'maikaile-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'maikaile-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'maikaile-h-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'maikaile-h-3.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '麦凯乐潮人之夜',
-        'desc':  '麦凯乐潮人之夜活动报名页面设计、开发、活动喷绘幕布设计',
-        'show': designPath + 'chaoren-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'chaoren-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'chaoren-p-1.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '城阳旅游美食攻略',
-        'desc':  '城阳旅游美食浅攻略专题设计',
-        'show': designPath + 'chengyang-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'chengyang-h-1.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '逛青岛专题头图',
-        'desc':  '逛青岛专题头图设计',
-        'show': designPath + 'guangqd-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'guangqd-h-1.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '青岛啤酒节专题',
-        'desc':  '第25届青岛国际啤酒节专题封面（手机版）、PC版头图、车贴',
-        'show': designPath + 'pijiujie-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'pijiujie-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'pijiujie-h-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'pijiujie-h-3.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '青岛说-政务发声平台',
-        'desc':  '政务机构第一发声平台-青岛说专题头图设计',
-        'show': designPath + 'qdshuo-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'qdshuo-h-1.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '山东路路面维修长图',
-        'desc':  '懂事说青岛-山东路路面维修长图,此处切开显示',
-        'show': designPath + 'shigong-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'shigong-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'shigong-h-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'shigong-h-3.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '周末去哪里旅游专题',
-        'desc':  '周末去哪里旅游路线规划-旅游专题',
-        'show': designPath + 'zhoumo-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'zhoumo-h-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'zhoumo-h-2.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '中国国际石墨烯创新大会',
-        'desc':  '2015中国国际石墨烯创新大会PC专题设计,展示内容进行切图展示',
-        'show': designPath + 'shimoxi-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'shimoxi-h-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'shimoxi-h-2.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '韩国青岛周旅游专题',
-        'desc':  '中韩旅游年，韩国青岛周旅游专题设计',
-        'show': designPath + 'zhonghan-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'zhonghan-h-1.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '新浪青岛介绍单页',
-        'desc':  '新浪青岛介绍单页设计',
-        'show': designPath + 'xinlangdm-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'xinlangdm-c-1.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '新浪青岛文化墙设计',
-        'desc':  '新浪青岛各个部门文化墙设计，部门较多，此处仅展示个别案例',
-        'show': designPath + 'wenhuaq-p-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'wenhuaq-p-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'wenhuaq-p-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'wenhuaq-p-3.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'wenhuaq-p-4.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '2014新浪温度晚宴',
-        'desc':  '新浪青岛2014“温度”答谢晚宴邀请函设计',
-        'show': designPath + 'wendu-y-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'wendu-y-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'wendu-y-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'wendu-y-3.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '微电影大赛专题设计',
-        'desc':  '澳柯玛杯青岛市第二届微电影大赛专题设计',
-        'show': designPath + 'wemovie-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'wemovie-h-1.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '新浪2015年台历设计',
-        'desc':  '新浪青岛2015年台历设计，篇幅原因只展示部分月份，尺寸为24CM * 12CM,设计时根据12生肖给每个月份均赋予特点，并且每个月份都关联介绍一个对应的频道项目',
-        'show': designPath + 'taili2015-c-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'taili2015-c-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'taili2015-c-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'taili2015-c-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'taili2015-c-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'taili2015-c-5.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '同城美食频道推荐专题汇总',
-        'desc':  '新浪青岛-同城美食频道（顺德小院、秀江南、时光纪、食界呗等）推荐专题设计',
-        'show': designPath + 'tongcheng-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'tongcheng-h-3.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'tongcheng-h-4.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'tongcheng-h-1.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'tongcheng-h-5.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'tongcheng-h-2.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '新闻中心频道专题汇总',
-        'desc':  '新浪青岛-新闻中心频道（顺风车、辟谣青岛、映像市南等）推荐专题设计，篇幅原因整理部分展示',
-        'show': designPath + 'xinwen-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'xinwen-h-4.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'xinwen-h-3.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'xinwen-h-2.jpg',
-                'isvertical' : false
-            },
-            {
-                'src': designPath + 'xinwen-h-1.jpg',
-                'isvertical' : false
-            }
-        ]
-    },
-    {
-        'label': '顺风车活动微博长图',
-        'desc':  '新浪青岛-2015顺风车活动微博长图',
-        'show': designPath + 'shunfengche-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'shunfengche-h-1.png',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'shunfengche-h-2.png',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'shunfengche-h-3.png',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'shunfengche-h-4.png',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '联通6s手机推介H5',
-        'desc':  '联通6s手机推荐套餐办理，赠送手机的H5系列，篇幅原因仅展示部分，具体请至作品分类-H5中查看',
-        'show': designPath + 'liantong6s-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'liantong6s-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'liantong6s-h-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'liantong6s-h-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'liantong6s-h-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'liantong6s-h-9.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '移动过年套餐推广H5',
-        'desc':  '新浪青岛-移动过年异地流量套餐办理推广H5',
-        'show': designPath + 'yidong-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'yidong-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'yidong-h-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'yidong-h-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'yidong-h-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'yidong-h-5.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '冬季乡宴专题',
-        'desc':  '新浪青岛-冬季乡宴专题设计',
-        'show': designPath + 'xiangyan-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'xiangyan-h-1.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '青岛信网招聘H5',
-        'desc':  '青岛信网招聘H5界面设计,因篇幅原因，仅做部分展示',
-        'show': designPath + 'xinzhaopin-show.jpg',
-        'images':  [
-            {
-                'src': designPath + 'xinzhaopin-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'xinzhaopin-h-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'xinzhaopin-h-3.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'xinzhaopin-h-4.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'xinzhaopin-h-5.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'xinzhaopin-h-6.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '海尔净水机宣传单页',
-        'desc':  '海尔施特劳斯U5净水机宣传单页-正反面',
-        'show': designPath + 'haierjingshui-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'haierjingshui-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'haierjingshui-h-2.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '屈臣氏吃喝玩乐H5游戏',
-        'desc':  '屈臣氏吃喝玩乐-玩转青岛H5游戏设计、协作开发,通过点击商家logo，计算出找到多少个商家',
-        'show': designPath + 'quchenshi-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'quchenshi-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'quchenshi-h-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'quchenshi-h-3.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '微尘网站设计',
-        'desc':  '青岛微尘网站设计、开发（首页、列表页、详细页等）以及小程序页面的设计与开发，详情请见作品分类',
-        'show': designPath + 'weichenweb-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'weichenweb-h-1.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'weichenweb-h-2.jpg',
-                'isvertical' : true
-            },
-            {
-                'src': designPath + 'weichenweb-h-3.jpg',
-                'isvertical' : true
-            }
-        ]
-    },
-    {
-        'label': '新型肺炎疫情攻坚战"疫"',
-        'desc':  '新型冠状病毒肺炎疫情专题微信宣传引导图片',
-        'show': designPath + 'zhanyi-h-1.jpg',
-        'images':  [
-            {
-                'src': designPath + 'zhanyi-h-1.jpg',
-                'isvertical' : true
-            }
-        ]
-    }
+  {
+    label: "信网H5卡片系统后台UI设计",
+    desc: "独立完成从设计到全栈开发搭建的一个项目",
+    show: designPath + "cardback-h-1.png",
+    images: [
+      {
+        src: designPath + "cardback-h-1.png",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "海尔三翼鸟厨房的奇妙之旅",
+    desc: "海尔三翼鸟厨房装修用户权益、装修产品介绍海报",
+    show: designPath + "sanyiniai-c-1.jpg",
+    images: [
+      {
+        src: designPath + "sanyiniai-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "sanyiniai-c-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "sanyiniai-c-3.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "海尔三翼鸟五一装修征集",
+    desc: "海尔三翼鸟装修H5专题",
+    show: designPath + "sanyiniao-h-1.jpg",
+    images: [
+      {
+        src: designPath + "sanyiniao-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "sanyiniao-h-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "sanyiniao-h-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "sanyiniao-h-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "sanyiniao-h-5.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "信网专题设计",
+    desc: "信网单页专题设计（前台界面）",
+    show: designPath + "xin-vuezt-1.jpg",
+    images: [
+      {
+        src: designPath + "xin-vuezt-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-vuezt-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-vuezt-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-vuezt-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-vuezt-5.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xin-vuezt-6.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "一介武夫网站 | 前台",
+    desc: "一介武夫网站前台页面设计",
+    show: designPath + "my-blog-2.jpg",
+    images: [
+      {
+        src: designPath + "my-blog-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "my-blog-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "my-blog-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "my-blog-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "my-blog-5.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "my-blog-6.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "my-blog-7.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "my-blog-8.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "my-blog-9.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "一介武夫网站 | 后台",
+    desc: "一介武夫网站后台界面peice-ui设计",
+    show: designPath + "my-pieceui-1.jpg",
+    images: [
+      {
+        src: designPath + "my-pieceui-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "my-pieceui-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "my-pieceui-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "my-pieceui-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "my-pieceui-5.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "my-pieceui-6.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    // 作品名称
+    label: "台湾展会邀请函",
+    // 作品描述
+    desc: "台湾医疗器械展邀请函",
+    // 瀑布流展示图
+    show: designPath + "yao-taiwan-1.jpg",
+    images: [
+      {
+        // 图片src
+        src: designPath + "yao-taiwan-1.jpg",
+        // 图片是否纵向 是true
+        isvertical: false,
+      },
+      {
+        // 图片src
+        src: designPath + "yao-taiwan-2.jpg",
+        // 图片是否纵向 是true
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "极地海洋世界广告",
+    desc: "2020年国庆节期间极地海洋世界广告设计",
+    show: designPath + "2020jidi-h.jpg",
+    images: [
+      {
+        src: designPath + "2020jidi-h.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "2012深圳会邀请函",
+    desc: "2012年深圳第67届医疗器械展会邀请函",
+    show: designPath + "yao-shenzhen-1.jpg",
+    images: [
+      {
+        src: designPath + "yao-shenzhen-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "yao-shenzhen-2.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "济南医疗展会邀请函",
+    desc: "2011济南第26届秋季医疗器械展会邀请函",
+    show: designPath + "jinan201107-y.jpg",
+    images: [
+      {
+        src: designPath + "jinan201107-y.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "济南医疗展会会刊跨页广告、喷绘",
+    desc: "2011年济南秋季医疗展会会刊跨页广告、展会装饰喷绘",
+    show: designPath + "jinan201107-c-1.jpg",
+    images: [
+      {
+        src: designPath + "jinan201107-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "jinan201107-c-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "jinan201107-p-1.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "2012济南医疗器械展-邀请函",
+    desc: "2012年第28届济南医疗器械展邀请函",
+    show: designPath + "jinan201209-y-1.jpg",
+    images: [
+      {
+        src: designPath + "jinan201209-y-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "jinan201209-y-2.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "2012济南医疗器械展喷绘",
+    desc: "2012年第28届济南医疗器械展展位以及展位装饰喷绘",
+    show: designPath + "jinan201209-p-1.jpg",
+    images: [
+      {
+        src: designPath + "jinan201209-p-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "jinan201209-p-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "jinan201209-p-3.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "HOLOGIC乳腺X光机广告",
+    desc: "HOLOGIC乳腺X光机展会KT板",
+    show: designPath + "yantai2012-p-2.jpg",
+    images: [
+      {
+        src: designPath + "yantai2012-p-2.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "烟台西门子新品发布会",
+    desc: "邀请函、喷绘、晚宴抽奖券等",
+    show: designPath + "yantai2012-c-1.jpg",
+    images: [
+      {
+        src: designPath + "yantai2012-c-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "yantai2012-p-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "yantai2012-y.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "日立靶中心CT产品发布会",
+    desc: "会议引导牌、发布会幕布、晚宴幕布、会议效果图",
+    show: designPath + "rili2012-c-1.jpg",
+    images: [
+      {
+        src: designPath + "rili2012-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "rili2012-p-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "rili2012-p-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "rili2012-p-3.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "日立ECLOS靶中心CT-X展架",
+    desc: "日立CT-X展架设计（设计需要遵循日立公司既有的设计规范）",
+    show: designPath + "riliECLOS-c-1.jpg",
+    images: [
+      {
+        src: designPath + "riliECLOS-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "riliECLOS-c-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "riliECLOS-c-3.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "日立靶中心CT产品发布会",
+    desc: "日立靶中心CT产品发布会-邀请函",
+    show: designPath + "rili2012-y-1.jpg",
+    images: [
+      {
+        src: designPath + "rili2012-y-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "rili2012-y-2.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "日立广州会-邀请函",
+    desc: "2013年8月广州弧形臂平板胃肠机技术研讨会-邀请函",
+    show: designPath + "riligzhou-y-1.jpg",
+    images: [
+      {
+        src: designPath + "riligzhou-y-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "riligzhou-y-2.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "日立广州会-喷绘",
+    desc: "2013年8月广州弧形臂平板胃肠机技术研讨会-喷绘（茶歇、签到、晚宴）",
+    show: designPath + "riligzhou-p-3.jpg",
+    images: [
+      {
+        src: designPath + "riligzhou-p-3.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "riligzhou-p-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "riligzhou-x-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "riligzhou-p-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "riligzhou-x-2.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "日立广州会-其他物料",
+    desc: "2013年8月广州弧形臂平板胃肠机技术研讨会-午餐券、入住券、矿泉水瓶贴、入住欢迎卡",
+    show: designPath + "riligzhou-c-2.jpg",
+    images: [
+      {
+        src: designPath + "riligzhou-c-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "riligzhou-c-3.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "riligzhou-c-4.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "riligzhou-c-5.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "riligzhou-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "riligzhou-x-4.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "2013摄情画意挂历",
+    desc: "曾任青岛市摄影家协会副主席孙其光先生-2013年摄影集挂历",
+    show: designPath + "2013guali-c-1.jpg",
+    images: [
+      {
+        src: designPath + "2013guali-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "2013guali-c-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "2013guali-c-3.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "厦门医疗展会邀请函",
+    desc: "2013年11月第70届中国国际医疗器械（秋季）博览会邀请函",
+    show: designPath + "xiamen2013-y-1.jpg",
+    images: [
+      {
+        src: designPath + "xiamen2013-y-1.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "飞利浦磁共振宣传册",
+    desc: "安丘中心医院飞利浦核磁共振产品宣传册，其中设备图片均为实景拍摄",
+    show: designPath + "anqiuci-show.jpg",
+    images: [
+      {
+        src: designPath + "anqiuci-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "anqiuci-c-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "anqiuci-c-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "anqiuci-c-4.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "安丘中心医院MRI宣传册",
+    desc: "安丘市中心医院MRI宣传册内容更新、设计更换",
+    show: designPath + "anqiuci2-show.jpg",
+    images: [
+      {
+        src: designPath + "anqiuci2-c-5.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "anqiuci2-c-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "anqiuci2-c-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "anqiuci2-c-3.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "anqiuci2-c-4.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "安丘中心医院MRI物料",
+    desc: "安丘市中心医院磁共振科室灯箱、胶片袋、引导牌等",
+    show: designPath + "anqiuci-show2.jpg",
+    images: [
+      {
+        src: designPath + "anqiuci-p-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "anqiuci-p-5.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "anqiuci-p-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "anqiuci-p-3.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "anqiuci-p-4.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "anqiuci-c-5.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "城阳北后楼摄影集",
+    desc: "城阳北后楼社区摄影集设计",
+    show: designPath + "beihoulou-c-2.jpg",
+    images: [
+      {
+        src: designPath + "beihoulou-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "beihoulou-c-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "beihoulou-c-3.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "beihoulou-c-4.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "崂山养生茶包装设计",
+    desc: "奇光溢彩文化有限公司出品的崂山养生茶包装设计方案",
+    show: designPath + "lscha-show.jpg",
+    images: [
+      {
+        src: designPath + "lscha-c-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "lscha-c-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "lscha-c-3.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "lscha-c-4.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "lscha-c-5.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "lscha-c-6.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "lscha-c-7.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "lscha-c-8.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "崂山养生茶包装方案2",
+    desc: "奇光溢彩文化有限公司出品的崂山养生茶包装设计方案2",
+    show: designPath + "lscha-c-9.jpg",
+    images: [
+      {
+        src: designPath + "lscha-c-9.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "成都医疗展会邀请函",
+    desc: "2012年第68届中国国际医疗器械秋季博览会（成都）邀请函设计",
+    show: designPath + "chengdu2012-y-1.jpg",
+    images: [
+      {
+        src: designPath + "chengdu2012-y-1.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "程云阁香品堂三折页",
+    desc: "程云阁香品堂三折页设计,净尺寸28.5cm * 21cm",
+    show: designPath + "chengyunge-c-1.jpg",
+    images: [
+      {
+        src: designPath + "chengyunge-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "chengyunge-c-2.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "程云阁香品堂VI设计",
+    desc: "程云阁香品堂VI设计，包括品牌logo、名片、信封信纸、香品包装设计等",
+    show: designPath + "chengyunge-showv.jpg",
+    images: [
+      {
+        src: designPath + "chengyunge-v-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "chengyunge-v-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "chengyunge-v-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "chengyunge-v-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "chengyunge-v-5.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "chengyunge-v-6.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "chengyunge-v-7.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "新浪年度风尚温度H5设计",
+    desc: "新浪“风尚温度”主题晚会H5,涵盖了如微博八点档等等年度多个主题项目",
+    show: designPath + "wendu-show.jpg",
+    images: [
+      {
+        src: designPath + "wendu-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "wendu-h-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "wendu-h-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "wendu-h-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "wendu-h-5.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "wendu-h-6.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "wendu-h-7.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "福建淘宝旅游线路四折页",
+    desc: "福建摄影、探索、休闲、收藏四条旅游线路进行介绍、推荐",
+    show: designPath + "fujian2011-c-1.jpg",
+    images: [
+      {
+        src: designPath + "fujian2011-c-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "fujian2011-c-2.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "日立平板胃肠研讨会邀请函",
+    desc: "日立弧形臂平板胃肠CUREVISTA技术研讨会邀请函,采用上下对折的设计",
+    show: designPath + "huangdao2011-y-1.jpg",
+    images: [
+      {
+        src: designPath + "huangdao2011-y-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "huangdao2011-y-2.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "日立平板胃肠研讨会物料",
+    desc: "日立弧形臂平板胃肠CUREVISTA技术研讨会现场会议幕布喷绘、以及晚宴抽奖券的设计",
+    show: designPath + "huangdao2011-p-1.jpg",
+    images: [
+      {
+        src: designPath + "huangdao2011-p-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "huangdao2011-p-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "huangdao2011-c-1.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "优耐特超市logo设计",
+    desc: "古早文化城优耐特超市logo设计",
+    show: designPath + "younaite-c-1.jpg",
+    images: [
+      {
+        src: designPath + "younaite-c-1.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "德国烤瓷牙宣传册",
+    desc: "霍特曼恒晖（青岛）烤瓷牙宣传册设计，包括宣传册中的烤瓷牙产品拍摄到后期产品图片处理设计",
+    show: designPath + "jiaya-show.jpg",
+    images: [
+      {
+        src: designPath + "jiaya-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "jiaya-c-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "jiaya-c-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "jiaya-c-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "jiaya-c-5.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "海云庵、糖球会明信片",
+    desc: "海云庵、糖球会明信片设计展示老青岛的人文风貌,一套12张仅取部分展示",
+    show: designPath + "mingxinp-show.jpg",
+    images: [
+      {
+        src: designPath + "mingxinp-c-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "mingxinp-c-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "mingxinp-c-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "mingxinp-c-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "mingxinp-c-5.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "青岛记忆水彩画明信片",
+    desc: "青岛记忆-老青岛水彩画明信片，采用孙其光先生描绘老青岛各个景点的画作，领略老青岛的魅力,这里展示明信片的包装、明信片的正反面设计",
+    show: designPath + "qdjiyi-show.jpg",
+    images: [
+      {
+        src: designPath + "qdjiyi-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "qdjiyi-c-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "qdjiyi-c-3.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "qdjiyi-c-4.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "孙其光水彩画册",
+    desc: "负责孙其光先生水彩画集装帧设计、画册排版",
+    show: designPath + "sqghuace-show.jpg",
+    images: [
+      {
+        src: designPath + "sqghuace-c-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "sqghuace-c-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "sqghuace-c-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "sqghuace-c-4.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "红木缘宣传单页",
+    desc: "崂山红木文化街初期宣传单页",
+    show: designPath + "hongmudm-c-1.jpg",
+    images: [
+      {
+        src: designPath + "hongmudm-c-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "hongmudm-c-2.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "红木文化街一期宣传单",
+    desc: "红木文化街宣传初期的宣传单",
+    show: designPath + "guzaodm-c-3.jpg",
+    images: [
+      {
+        src: designPath + "guzaodm-c-3.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "红木文化街一期宣传单",
+    desc: "红木文化街宣传初期的宣传单",
+    show: designPath + "guzaodm-c-2.jpg",
+    images: [
+      {
+        src: designPath + "guzaodm-c-2.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "红木文化街一期登报广告",
+    desc: "红木文化街一期宣传时于青岛晚报投放的广告",
+    show: designPath + "guzaobz-c-1.jpg",
+    images: [
+      {
+        src: designPath + "guzaobz-c-1.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "古早文化艺术节设计",
+    desc: "古早文化艺术节邀请函、礼品券、宣传海报、参观券等设计",
+    show: designPath + "guzaojie-c-1.jpg",
+    images: [
+      {
+        src: designPath + "guzaojie-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "guzaojie-c-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "guzaojie-c-3.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "guzaojie-c-4.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "guzaojie-c-5.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "guzaojie-c-6.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "古早文化城晚报广告",
+    desc: "古早文化城晚报投放广告设计",
+    show: designPath + "guzaobz-c-2.jpg",
+    images: [
+      {
+        src: designPath + "guzaobz-c-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "guzaobz-c-7.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "古早文化城画报广告（一）",
+    desc: "古早文化城画报广告一期投放",
+    show: designPath + "guzaobz-c-3.jpg",
+    images: [
+      {
+        src: designPath + "guzaobz-c-3.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "古早文化城画报广告（二）",
+    desc: "古早文化城画报广告二期投放",
+    show: designPath + "guzaobz-c-4.jpg",
+    images: [
+      {
+        src: designPath + "guzaobz-c-4.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "古早文化城画报广告（三）",
+    desc: "古早文化城画报广告三期投放",
+    show: designPath + "guzaobz-c-5.jpg",
+    images: [
+      {
+        src: designPath + "guzaobz-c-5.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "古早文化城画报广告（四）",
+    desc: "古早文化城画报广告四期投放，跨页广告",
+    show: designPath + "guzaobz-c-6.jpg",
+    images: [
+      {
+        src: designPath + "guzaobz-c-6.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "古早文化城招商海报",
+    desc: "古早文化城招商海报（正反面）",
+    show: designPath + "guzaodm-c-5.jpg",
+    images: [
+      {
+        src: designPath + "guzaodm-c-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "guzaodm-c-5.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "古早文化城宣传单页",
+    desc: "古早文化城宣传四折单页，采用斜切式设计，在正面进行折叠时，可以显示出目录",
+    show: designPath + "guzaodm-c-6-show.jpg",
+    images: [
+      {
+        src: designPath + "guzaodm-c-6.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "guzaodm-c-7.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "古早文化城招商手册",
+    desc: "古古早文化城招商手册，封面采用特殊纸张（红色）+ 烫金，内容为介绍文化城内各个业态，以及提供的服务项目等，篇幅原因此处仅取个别页进行展示",
+    show: designPath + "hmuce-c-1.jpg",
+    images: [
+      {
+        src: designPath + "hmuce-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "hmuce-c-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "hmuce-c-3.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "hmuce-c-4.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "hmuce-c-5.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "hmuce-c-6.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "古早文化城VI（一）",
+    desc: "古古早文化城VI设计-基本组合",
+    show: designPath + "guzao-v-show1.jpg",
+    images: [
+      {
+        src: designPath + "guzao-v-logo.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "guzao-v-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "guzao-v-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "guzao-v-3.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "古早文化城VI（二）",
+    desc: "古古早文化城VI设计-衍生产品",
+    show: designPath + "guzao-v-show2.jpg",
+    images: [
+      {
+        src: designPath + "guzao-v-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "guzao-v-5.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "guzao-v-6.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "guzao-v-7.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "古早文化城VI（三）",
+    desc: "古古早文化城VI设计-商场标识",
+    show: designPath + "guzao-v-show3.jpg",
+    images: [
+      {
+        src: designPath + "guzao-v-8.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "guzao-v-9.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "guzao-v-10.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "guzao-v-11.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "guzao-v-12.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "枇杷派H5-被炒风险检测",
+    desc: "枇杷派H5-被炒风险设计文件，通过疯狂点击左右图片按键来进行游戏",
+    show: designPath + "pipapai-h-show1.jpg",
+    images: [
+      {
+        src: designPath + "pipapai-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "pipapai-h-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "pipapai-h-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "pipapai-h-4.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "孤独症患者",
+    desc: "枇杷派H5-孤独症患者，选择检测类H5设计，对即将毕业的大学生进行就业检测，推荐枇杷派招聘APP,仅截取部分页面展示",
+    show: designPath + "pipapai-h-show2.jpg",
+    images: [
+      {
+        src: designPath + "pipapai-h-5.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "pipapai-h-6.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "pipapai-h-7.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "pipapai-h-8.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "枇杷派全国校园行",
+    desc: "枇杷派全国校园行邀请函设计",
+    show: designPath + "pipapai-y-1.jpg",
+    images: [
+      {
+        src: designPath + "pipapai-y-1.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "车阵吧公众号宣传",
+    desc: "微信车阵吧公众号活动旗帜、公众号引导图",
+    show: designPath + "chezhen-c-1.jpg",
+    images: [
+      {
+        src: designPath + "chezhen-c-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "chezhen-c-2.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "青岛眼科医院专题",
+    desc: "新浪青岛-青岛眼科医院专题头图、专题设计",
+    show: designPath + "yanke-h-1.jpg",
+    images: [
+      {
+        src: designPath + "yanke-h-1.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "金家岭互联网金融高峰论坛",
+    desc: "第二届金家岭互联网金融高峰论坛专题宣传长图设计,篇幅所限仅节选部分展示",
+    show: designPath + "ejinrong-h-1.jpg",
+    images: [
+      {
+        src: designPath + "ejinrong-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "ejinrong-h-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "ejinrong-h-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "ejinrong-h-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "ejinrong-h-5.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "奔向麦凯乐H5游戏",
+    desc: "奔向麦凯乐H5游戏界面设计、以及进行开发,游戏中素材均做切图处理，此处不做展示",
+    show: designPath + "maikaile-h-1.jpg",
+    images: [
+      {
+        src: designPath + "maikaile-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "maikaile-h-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "maikaile-h-3.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "麦凯乐潮人之夜",
+    desc: "麦凯乐潮人之夜活动报名页面设计、开发、活动喷绘幕布设计",
+    show: designPath + "chaoren-h-1.jpg",
+    images: [
+      {
+        src: designPath + "chaoren-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "chaoren-p-1.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "城阳旅游美食攻略",
+    desc: "城阳旅游美食浅攻略专题设计",
+    show: designPath + "chengyang-h-1.jpg",
+    images: [
+      {
+        src: designPath + "chengyang-h-1.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "逛青岛专题头图",
+    desc: "逛青岛专题头图设计",
+    show: designPath + "guangqd-h-1.jpg",
+    images: [
+      {
+        src: designPath + "guangqd-h-1.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "青岛啤酒节专题",
+    desc: "第25届青岛国际啤酒节专题封面（手机版）、PC版头图、车贴",
+    show: designPath + "pijiujie-h-1.jpg",
+    images: [
+      {
+        src: designPath + "pijiujie-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "pijiujie-h-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "pijiujie-h-3.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "青岛说-政务发声平台",
+    desc: "政务机构第一发声平台-青岛说专题头图设计",
+    show: designPath + "qdshuo-h-1.jpg",
+    images: [
+      {
+        src: designPath + "qdshuo-h-1.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "山东路路面维修长图",
+    desc: "懂事说青岛-山东路路面维修长图,此处切开显示",
+    show: designPath + "shigong-h-1.jpg",
+    images: [
+      {
+        src: designPath + "shigong-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "shigong-h-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "shigong-h-3.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "周末去哪里旅游专题",
+    desc: "周末去哪里旅游路线规划-旅游专题",
+    show: designPath + "zhoumo-h-1.jpg",
+    images: [
+      {
+        src: designPath + "zhoumo-h-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "zhoumo-h-2.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "中国国际石墨烯创新大会",
+    desc: "2015中国国际石墨烯创新大会PC专题设计,展示内容进行切图展示",
+    show: designPath + "shimoxi-show.jpg",
+    images: [
+      {
+        src: designPath + "shimoxi-h-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "shimoxi-h-2.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "韩国青岛周旅游专题",
+    desc: "中韩旅游年，韩国青岛周旅游专题设计",
+    show: designPath + "zhonghan-h-1.jpg",
+    images: [
+      {
+        src: designPath + "zhonghan-h-1.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "新浪青岛介绍单页",
+    desc: "新浪青岛介绍单页设计",
+    show: designPath + "xinlangdm-c-1.jpg",
+    images: [
+      {
+        src: designPath + "xinlangdm-c-1.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "新浪青岛文化墙设计",
+    desc: "新浪青岛各个部门文化墙设计，部门较多，此处仅展示个别案例",
+    show: designPath + "wenhuaq-p-1.jpg",
+    images: [
+      {
+        src: designPath + "wenhuaq-p-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "wenhuaq-p-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "wenhuaq-p-3.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "wenhuaq-p-4.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "2014新浪温度晚宴",
+    desc: "新浪青岛2014“温度”答谢晚宴邀请函设计",
+    show: designPath + "wendu-y-1.jpg",
+    images: [
+      {
+        src: designPath + "wendu-y-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "wendu-y-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "wendu-y-3.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "微电影大赛专题设计",
+    desc: "澳柯玛杯青岛市第二届微电影大赛专题设计",
+    show: designPath + "wemovie-h-1.jpg",
+    images: [
+      {
+        src: designPath + "wemovie-h-1.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "新浪2015年台历设计",
+    desc: "新浪青岛2015年台历设计，篇幅原因只展示部分月份，尺寸为24CM * 12CM,设计时根据12生肖给每个月份均赋予特点，并且每个月份都关联介绍一个对应的频道项目",
+    show: designPath + "taili2015-c-1.jpg",
+    images: [
+      {
+        src: designPath + "taili2015-c-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "taili2015-c-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "taili2015-c-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "taili2015-c-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "taili2015-c-5.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "同城美食频道推荐专题汇总",
+    desc: "新浪青岛-同城美食频道（顺德小院、秀江南、时光纪、食界呗等）推荐专题设计",
+    show: designPath + "tongcheng-show.jpg",
+    images: [
+      {
+        src: designPath + "tongcheng-h-3.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "tongcheng-h-4.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "tongcheng-h-1.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "tongcheng-h-5.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "tongcheng-h-2.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "新闻中心频道专题汇总",
+    desc: "新浪青岛-新闻中心频道（顺风车、辟谣青岛、映像市南等）推荐专题设计，篇幅原因整理部分展示",
+    show: designPath + "xinwen-show.jpg",
+    images: [
+      {
+        src: designPath + "xinwen-h-4.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "xinwen-h-3.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "xinwen-h-2.jpg",
+        isvertical: false,
+      },
+      {
+        src: designPath + "xinwen-h-1.jpg",
+        isvertical: false,
+      },
+    ],
+  },
+  {
+    label: "顺风车活动微博长图",
+    desc: "新浪青岛-2015顺风车活动微博长图",
+    show: designPath + "shunfengche-show.jpg",
+    images: [
+      {
+        src: designPath + "shunfengche-h-1.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "shunfengche-h-2.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "shunfengche-h-3.png",
+        isvertical: true,
+      },
+      {
+        src: designPath + "shunfengche-h-4.png",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "联通6s手机推介H5",
+    desc: "联通6s手机推荐套餐办理，赠送手机的H5系列，篇幅原因仅展示部分，具体请至作品分类-H5中查看",
+    show: designPath + "liantong6s-show.jpg",
+    images: [
+      {
+        src: designPath + "liantong6s-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "liantong6s-h-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "liantong6s-h-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "liantong6s-h-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "liantong6s-h-9.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "移动过年套餐推广H5",
+    desc: "新浪青岛-移动过年异地流量套餐办理推广H5",
+    show: designPath + "yidong-show.jpg",
+    images: [
+      {
+        src: designPath + "yidong-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "yidong-h-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "yidong-h-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "yidong-h-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "yidong-h-5.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "冬季乡宴专题",
+    desc: "新浪青岛-冬季乡宴专题设计",
+    show: designPath + "xiangyan-h-1.jpg",
+    images: [
+      {
+        src: designPath + "xiangyan-h-1.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "青岛信网招聘H5",
+    desc: "青岛信网招聘H5界面设计,因篇幅原因，仅做部分展示",
+    show: designPath + "xinzhaopin-show.jpg",
+    images: [
+      {
+        src: designPath + "xinzhaopin-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xinzhaopin-h-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xinzhaopin-h-3.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xinzhaopin-h-4.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xinzhaopin-h-5.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "xinzhaopin-h-6.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "海尔净水机宣传单页",
+    desc: "海尔施特劳斯U5净水机宣传单页-正反面",
+    show: designPath + "haierjingshui-h-1.jpg",
+    images: [
+      {
+        src: designPath + "haierjingshui-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "haierjingshui-h-2.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "屈臣氏吃喝玩乐H5游戏",
+    desc: "屈臣氏吃喝玩乐-玩转青岛H5游戏设计、协作开发,通过点击商家logo，计算出找到多少个商家",
+    show: designPath + "quchenshi-h-1.jpg",
+    images: [
+      {
+        src: designPath + "quchenshi-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "quchenshi-h-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "quchenshi-h-3.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: "微尘网站设计",
+    desc: "青岛微尘网站设计、开发（首页、列表页、详细页等）以及小程序页面的设计与开发，详情请见作品分类",
+    show: designPath + "weichenweb-h-1.jpg",
+    images: [
+      {
+        src: designPath + "weichenweb-h-1.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "weichenweb-h-2.jpg",
+        isvertical: true,
+      },
+      {
+        src: designPath + "weichenweb-h-3.jpg",
+        isvertical: true,
+      },
+    ],
+  },
+  {
+    label: '新型肺炎疫情攻坚战"疫"',
+    desc: "新型冠状病毒肺炎疫情专题微信宣传引导图片",
+    show: designPath + "zhanyi-h-1.jpg",
+    images: [
+      {
+        src: designPath + "zhanyi-h-1.jpg",
+        isvertical: true,
+      },
+    ],
+  },
 ];

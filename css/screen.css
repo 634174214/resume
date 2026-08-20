@@ -704,7 +704,7 @@ abbr,acronym {
 .Frontend .detail{width: 300px;overflow: hidden;display: block;}
 .Frontend .linkto{display: block;}
 .Frontend .linkto.active .name{color: #E95514;}
-.Frontend .detail .imgbox{width: 100%;height: 200px;overflow: hidden;display: block;position: relative;margin-bottom: 15px;background: url(../img/loading-pc.gif) no-repeat center center;}
+.Frontend .detail .imgbox{width: 100%;height: 200px;overflow: hidden;display: block;position: relative;margin-bottom: 15px;background: #f2f2f2 url(../img/loading-pc.gif) no-repeat center center;}
 .Frontend .detail .imgbox img.work-pic{width: 100%;display: block;}
 .Frontend .detail .QRcode{position: absolute;width: 100%;height: 100%;background: url(../img/bg-black.png);display: block;top: 0;left: 0;right: 0;display: none;}
 .Frontend .detail .QRcode .work-qr{display: block;width: 100px;height: 100px;margin: 30px auto 10px;background: #fff url('../img/loading-pc.gif') center center no-repeat;border-radius: 5px;padding: 8px;}

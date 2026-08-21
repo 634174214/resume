@@ -120,6 +120,7 @@ var frontendMethods = function() {
     var $slides = $wrap.find('.swiper-slide');
     var _self = this;
     var containerHeight = $('FrontendShow').height();
+    var $frontEndRollBtn = $('#front-end-roll');
     // 初始化时，渲染初始数据
     this.first = function() {
         // https://segmentfault.com/q/1010000004474036 JQ中实现一次性渲染
@@ -133,8 +134,16 @@ var frontendMethods = function() {
         if ($this.hasClass('active')) {
             return;
         }
+
+        // 每次点击切换选项卡都重置换一换的按钮状态
+        $frontEndRollBtn.removeClass('disabled');
+
         // 这里的this指向这个构造函数，
         var index = $this.index();
+        var dirname = $this.data('dir');
+        if(!worksDir[dirname]) {
+            $frontEndRollBtn.addClass('disabled');
+        }
         // 对应点击的下标 找到webbetter数组中对应的data数组，否则这里需要用for-in
         var contents = webBetter[index];
         var contentval = contents.data,
@@ -237,6 +246,47 @@ var frontendMethods = function() {
             return false;
         });
     }
+    this.getActiveData = function() {
+        var $activeSpan = $('#tabs-bar .active');
+        var dirname = $activeSpan.data('dir');
+        if(!worksDir[dirname]) {
+            return [];
+        }
+        var resArr = getRandomItems(worksDir[dirname], 3);
+        return resArr;
+    },
+    this.rollClick = function(ispc, frontendSwiper) {
+        if($frontEndRollBtn.hasClass('disabled')) {
+            return;
+        }
+        $frontEndRollBtn.addClass('disabled');
+        var newData = _self.getActiveData();
+        if(newData.length <= 0) {
+            return;
+        }
+        // 找出当前的active是第几个
+        var index = $('#tabs-bar .active').index();
+        // 同时也要更新记录的固定数据
+        webBetter[index]['data'] = newData;
+        var qrclickShow = webBetter[index].qrclickShow;
+        $slides.each(function() {
+            $(this).empty();
+        });
+        this.setSlide(newData, $slides, qrclickShow);
+        if(ispc) {
+            setTimeout(_self.detailhover, 500);
+        } else {
+            // 手机版换完之后回第一帧
+            // setTimeout(function() {
+            //     frontendSwiper.swipeTo(0, 800, false);
+            // }, 200);
+            // frontendSwiper.reInit();
+            frontendSwiper.swipeTo(0, 800, false);
+        }
+        setTimeout(function() {
+            $frontEndRollBtn.removeClass('disabled');
+        }, 3000);
+    }
 }
 frontendMethods.prototype = {
     init: function(ispc) {
@@ -267,6 +317,11 @@ frontendMethods.prototype = {
                 setTimeout(_self.detailhover, 500);
             }
         });
+
+        // 点击前端换一换按钮
+        $('#front-end-roll').on('click', function() {
+            _self.rollClick(ispc, frontendSwiper);
+        });
     },
     // 定义结构模板
     template: function(opt, qrclickShow) {
@@ -295,6 +350,7 @@ frontendMethods.prototype = {
             var $workQr = $linkto.find('.work-qr').eq(0);
             var $workQrImg = $workQr.find('img');
             if($workQrImg && !$workQrImg.attr('src')) {
+                $workQr.empty();
                 new QRCode($workQr[0], {
                     text: href,
                     width: 100,
@@ -472,7 +528,7 @@ AOS.init({
     duration: 500
 });
 
-// 后台作品展示、弹窗
+// 后台作品展示、弹窗 已经废弃
 var afterEndMethods = function() {
     function After() {
         this.$list = $('.afterend-list').clone().addClass('hide').removeAttr('id');
@@ -543,6 +599,19 @@ var afterEndMethods = function() {
     }
 
     return new After();
+};
+
+// 后端页面启动时随机显示
+var afterEndRandShow = function() {
+    var $allItems = $('#afterend-list li');
+    // 第0个是带着show样式 所以排除掉 从下标1开始
+    var indexArr = rangeStep(1, $allItems.length - 1, 1);
+    indexArr = shuffleArray(indexArr)
+    // 截取开头2项索引
+    indexArr = indexArr.slice(0, 2);
+    $.each(indexArr, function(index, item) {
+        $allItems.eq(item).addClass('show');
+    });
 }();
 
 $(function() {
@@ -696,10 +765,7 @@ $(function() {
         $(this).parent().fadeOut();
         $cover.fadeOut();
     });
-    // 查看全部前端作品
-    $('#Frontend-lookall').on('click', function() {
-        $('#all-webworks').fadeIn();
-    });
+    
     // 启动设计作品的瀑布流
     var water = new designWaterfall(screenHeight, isPc);
     water.init();
@@ -749,7 +815,7 @@ $(function() {
         }
     });
 
-    // 【新】使用 IntersectionObserver 自动高亮导航（带安全降级）
+    // 使用 IntersectionObserver 自动高亮导航（带安全降级）
     var sectionsElements = sections.map(function(id) { return document.querySelector(id); }).filter(Boolean);
 
     // 检查浏览器是否支持 IntersectionObserver
@@ -765,6 +831,22 @@ $(function() {
             entries.forEach(function(entry) {
                 if (entry.isIntersecting) {
                     var index = sections.indexOf('#' + entry.target.id);
+
+                    // 如果是后端和前端 滚动到对应区域时，出现换一换按钮
+                    if(!isPc) {
+                        switch(entry.target.id) {
+                            case 'afterend':
+                                $('#after-end-roll').fadeIn();
+                                break;
+                            case 'Frontend':
+                                $('#front-end-roll').fadeIn();
+                                break;
+                            default:
+                                $('#after-end-roll').fadeOut();
+                                $('#front-end-roll').fadeOut();
+                        }
+                    }
+
                     if (index !== -1) {
                         $navLis.removeClass('active');
                         $navLis.eq(index).addClass('active');
@@ -784,6 +866,7 @@ $(function() {
 
     } else {
         // --- 传统兼容方案（兜底）: 如果浏览器不支持 IntersectionObserver，用你原来的 Scroll 监听 ---
+        // 浏览器不支持IntersectionObserver 那么就不显示 换一换按钮
         $(window).on('scroll', function() {
             if (window.isNavigating) { return; }
             var scrollTop = $(window).scrollTop();
@@ -873,5 +956,19 @@ $(function() {
             content: iframeUrl,
         });
     });
+
+    // 随机更换后端项目
+    $('#after-end-roll').on('click', function() {
+        var $afterEndWorks = $('#afterend-list li');
+        $afterEndWorks.removeClass('show')
+        var indexArr = rangeStep(0, $afterEndWorks.length - 1, 1);
+        indexArr = shuffleArray(indexArr);
+        indexArr = indexArr.slice(0, 3);
+        $.each(indexArr, function(index, item) {
+            $afterEndWorks.eq(item).addClass('show');
+        });
+    });
+
+    
 
 });

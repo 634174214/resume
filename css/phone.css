@@ -497,6 +497,10 @@ html,body{font-size: 16px;height:auto}
 .afterend-list li{
     width: 100%;
     margin-bottom: 20px;
+    display: none;
+}
+.afterend-list li.show{
+    display: block;
 }
 .afterend-list li a,
 .afterend-list li em{
@@ -582,6 +586,10 @@ html,body{font-size: 16px;height:auto}
 .afterend-list .info-item p{
     line-height: 28px;
     font-size: 16px;
+}
+.afterend-list .info-item p a{
+    display: inline;
+     color:#14a0e9;
 }
 .afterend-list .info-item .goto{
     color:#14a0e9;
@@ -1015,6 +1023,46 @@ background-position:-114px -232px;right: 10px;animation: moveright 1.5s both inf
     background: rgba(255, 255, 255, 0.4); /* 按下去时背景色变亮一点 */
     transform: scale(0.95); /* 按下去时微微缩小，模拟真实按压感 */
 }
+
+/* 换一换 */
+.roll-btn{
+    position: fixed;
+    color: #E95514;
+    padding: 10px 0px;
+    border: 1px solid;
+    right: 15px;
+    bottom: 50%;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 10;
+    display: none;
+}
+
+.roll-button{
+    border: 0;
+    color: #E95514;
+    background-image: url('../img/icon-roll.svg');
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: 50% auto;
+    width: 40px;
+    background-color: transparent;
+    padding-top: 25px;
+    writing-mode: vertical-lr;
+     text-orientation: upright;
+     cursor: pointer;
+}
+.roll-btn.disabled {
+    -webkit-filter: grayscale(100%) opacity(0.3);
+            filter: grayscale(100%) opacity(0.3);
+    pointer-events: none; /* 禁用点击 */
+}
+.roll-btn.disabled .roll-button{
+   -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+
 
 .hide,
 .m-hide{display: none;}

@@ -24,13 +24,11 @@
 	<![endif]-->
     <!-- 百度网站监测 -->
     <script>
-        var _hmt = _hmt || [];
-        (function() {
-          var hm = document.createElement("script");
-          hm.src = "https://hm.baidu.com/hm.js?44105390c4fdb96c8ffaede1d3d571ff";
-          var s = document.getElementsByTagName("script")[0];
-          s.parentNode.insertBefore(hm, s);
-        })();
+        if(window.location.href.indexOf('localhost') > -1 ||
+           window.location.href.indexOf('file://') > -1
+        ) {
+            document.title = '常用提示词';
+        }
     </script>
 </head>
 <body ontouchstart>
@@ -431,6 +429,9 @@
             </div>
             <span class="line"></span>
         </div>
+         <div class="roll-btn" id="after-end-roll">
+            <button class="roll-button">换一换</button>
+        </div>
         <article class="afterend-works" aos="fade-up">
             <ul id="afterend-list" class="afterend-list">
                 <li class="show">
@@ -449,7 +450,7 @@
                         </a>
                     </div>
                 </li>
-                <li class="show">
+                <li>
                     <a href="https://law.qdxin.cn/ai/" target="_blank" class="imgbox">
                         <div class="link-see">
                             <span>前往链接</span>
@@ -481,7 +482,119 @@
                         </a>
                     </div>
                 </li>
-                <li class="show">
+                <li>
+                    <a href="https://wubin.infinityfreeapp.com/my-works/works/xin-card/app/login.html" target="_blank" class="imgbox">
+                        <div class="link-see">
+                            <span>前往链接</span>
+                        </div>
+                        <img src="images/after-end/xin-card.jpg">
+                    </a>
+                    <div class="info-item">
+                        <h3>信网创意海报设计与管理系统</h3>
+                        <p>基于PHP+MySQL+VUE+ELEMENT-UI+Html2Canvas+VUEX+VUE-Router开发的海报设计管理系统，部署于信网内网。内置多种海报模板，开箱即用，让用户实现快速海报图片的合成与创作。</p>
+                        <a href="https://wubin.infinityfreeapp.com/my-works/works/xin-card/app/login.html" target="_blank" class="goto">
+                            <small>qdxin.cn/poster/</small>
+                            <span>立即前往 &gt;</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <a href="https://wubin.infinityfreeapp.com/my-works/works/h5_zt_image/backend/index.php" target="_blank" class="imgbox">
+                        <div class="link-see">
+                            <span>前往链接</span>
+                        </div>
+                        <img src="images/after-end/h5-zt.jpg">
+                    </a>
+                    <div class="info-item">
+                        <h3>信网H5图集专题系统</h3>
+                        <p>基于PHP+Mysql+VUE全栈开发的H5图集系统，已在内网稳定运行。系统融合专题生成、图片上传与新闻链接抓取功能，支持可视化拖拽编辑，能够快速构建并发布响应式移动端图集专题，有效提升了内容生产效率。</p>
+                        <a href="https://wubin.infinityfreeapp.com/my-works/works/h5_zt_image/backend/index.php" target="_blank" class="goto">
+                            <small>qdxin.cn/h5pic/</small>
+                            <span>立即前往 &gt;</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <a href="https://ai2hinen9t1.thexin.cn/app/store/public/html/#/home" target="_blank" class="imgbox">
+                        <div class="link-see">
+                            <span>前往链接</span>
+                        </div>
+                        <img src="images/after-end/pic-store-kehu.jpg">
+                    </a>
+                    <div class="info-item">
+                        <h3>信网资源库（客户端）</h3>
+                        <p>采用PHP + MySQL + Vue全家桶开发的信网资源库系统，图片支持瀑布流展示，同时也涵盖了常用的免版权音视频素材与资源检索功能。系统需授权访问，若正式地址无法访问，可点击<a href="https://wubin.infinityfreeapp.com/my-works/works/qd-pics-2025/app/html/" target="_blank">效果演示</a>查看。</p>
+                        <a href="https://ai2hinen9t1.thexin.cn/app/store/public/html/#/home" target="_blank" class="goto">
+                            <small>qdxin.cn/store/</small>
+                            <span>立即前往 &gt;</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <a href="https://ai2hinen9t1.thexin.cn/app/store/server/html/login.html" target="_blank" class="imgbox">
+                        <div class="link-see">
+                            <span>前往链接</span>
+                        </div>
+                        <img src="images/after-end/pic-store-guanli.jpg">
+                    </a>
+                    <div class="info-item">
+                        <h3>信网资源库（管理端）</h3>
+                        <p>基于PHP+Mysql+VUE全家桶+Element-UI开发的资源管理系统。系统实现图片上传、压缩包断点续传、资源在线压缩打包等功能。系统正式地址登录需账号密码，可与我联系获取体验；或者查看<a href="https://wubin.infinityfreeapp.com/my-works/works/qd-pics-2025/server/html/login.html" target="_blank">效果演示</a>。</p>
+                        <a href="https://ai2hinen9t1.thexin.cn/app/store/server/html/login.html" target="_blank" class="goto">
+                            <small>qdxin.cn/store/</small>
+                            <span>立即前往 &gt;</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <a href="https://law.qdxin.cn/pro/" target="_blank" class="imgbox">
+                        <div class="link-see">
+                            <span>前往链接</span>
+                        </div>
+                        <img src="images/after-end/lawai-pro.jpg">
+                    </a>
+                    <div class="info-item">
+                        <h3>AI智案法宝</h3>
+                        <p>依托阿里通义法睿、OpenApi模型，基于PHP+Mysql+VUE开发的智能法律咨询系统。单次提问即可多模型同步作答，多维度逐层深度拆解法律问题。系统实行内部邀请制，如需体验请与我联系，或者查看<a href="https://wubin.infinityfreeapp.com/my-works/works/law-ai-plus/" target="_blank">效果演示</a>。</p>
+                        <a href="https://law.qdxin.cn/pro/" target="_blank" class="goto">
+                            <small>law.qdxin.cn/pro/</small>
+                            <span>立即前往 &gt;</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <a href="https://ai2hinen9t1.thexin.cn/ai/photo-smart/" target="_blank" class="imgbox">
+                        <div class="link-see">
+                            <span>前往链接</span>
+                        </div>
+                        <img src="images/webbetter/xin-smart-photo.jpg">
+                    </a>
+                    <div class="info-item">
+                        <h3>信网智绘</h3>
+                        <p>基于即梦AI构建智能绘图系统，单点登录集成至信网智能体平台，使用PHP+DIFY+VUE+Vuex+Konva开发。支持文生图、图生图、图生视频及AI辅助编辑。如需体验请与我联系，或者查看<a href="https://wubin.infinityfreeapp.com/my-works/works/photo-smart/" target="_blank">效果演示</a>。</p>
+                        <a href="https://ai2hinen9t1.thexin.cn/ai/photo-smart/" target="_blank" class="goto">
+                            <small>qdxin.cn/smartphoto/</small>
+                            <span>立即前往 &gt;</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <a href="https://ai2hinen9t1.thexin.cn/ai/article-check-v2.8/" target="_blank" class="imgbox">
+                        <div class="link-see">
+                            <span>前往链接</span>
+                        </div>
+                        <img src="images/webbetter/article-check-v28.jpg">
+                    </a>
+                    <div class="info-item">
+                        <h3>稿件审校AI</h3>
+                        <p>基于Dify工作流，调用多个模型反复对新闻稿件进行全面内容校对，并识别其中可能存在的风险隐患，单点登录集成至信网智能体平台，使用PHP+DIFY+VUE开发。如需体验请与我联系，或者查看<a href="https://wubin.infinityfreeapp.com/my-works/works/dify-article-check/?app_id=14" target="_blank">效果演示</a>。</p>
+                        <a href="https://ai2hinen9t1.thexin.cn/ai/article-check-v2.8/" target="_blank" class="goto">
+                            <small>qdxin.cn/article/</small>
+                            <span>立即前往 &gt;</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
                     <a href="https://ai2hinen9t1.thexin.cn/home/index.php" target="_blank" class="imgbox">
                         <div class="link-see">
                             <span>前往链接</span>
@@ -492,7 +605,7 @@
                         <h3>信网AI智能体</h3>
                         <p>集成了稿件审校、信网智绘、裁判文书撰写等多款独立开发的智能体。智能体应用基于Dify构建各类AI能力；使用PHP+MySQL实现用户管理、权限鉴权，完成前端与Dify服务之间的中转通信；Vue开发交互前台。</p>
                         <a href="https://ai2hinen9t1.thexin.cn/home/index.php" target="_blank" class="goto">
-                            <small>thexin.cn</small>
+                            <small>qdxin.cn</small>
                             <span>立即前往 &gt;</span>
                         </a>
                     </div>
@@ -519,13 +632,16 @@
             </div>
             <span class="line"></span>
         </div>
+        <div class="roll-btn" id="front-end-roll">
+            <button class="roll-button">换一换</button>
+        </div>
         <article class="Frontend-wrapper">
             <div class="tabs-bar" id="tabs-bar" aos="fade-up">
-                <span class="active" data-scrollto="fullstack">网站 <em>/ 网页</em></span>
-                <span data-scrollto="frontend">WebApp</span>
-                <span data-scrollto="app">APP <em>/ 小程序</em></span>
-                <span data-scrollto="game">Game</span>
-                <span data-scrollto="frontend">H5</span>
+                <span class="active" data-scrollto="fullstack" data-dir="site">网站 <em>/ 网页</em></span>
+                <span data-scrollto="frontend" data-dir="webapp">WebApp</span>
+                <span data-scrollto="app" data-dir="app">APP <em>/ 小程序</em></span>
+                <span data-scrollto="game" data-dir="game">Game</span>
+                <span data-scrollto="frontend" data-dir="h5">H5</span>
             </div>
             <aside class="tabs-content">
                 <div class="swiper-container" id="FrontendShow">
@@ -557,7 +673,6 @@
                     <div class="pagination"></div>
                 </div>
             </aside>
-            <!-- <div class="all" id="Frontend-lookall" aos="zoom-in">作品分类</div> -->
              <a href="https://634174214.github.io/portfolio/" target="_blank" class="all" aos="zoom-in" id="front-end-all">查看全部</a>
         </article>
     </section>
@@ -587,39 +702,7 @@
         <em>感谢您的耐心观看，祝您工作顺利，期待与您相见</em>
         <em>（由于篇幅所限，如需了解更多作品资料请致电联系）</em>
     </footer>
-    <!-- 全部作品 -->
-    <section class="all-webworks" id="all-webworks">
-        <span class="icon close close-hook"></span>
-        <div class="all-webworks-wrapper">
-            <h3 class="works-in-headline">
-                <span>作品分类</span>
-                <small>请点击查看您感兴趣的作品</small>
-            </h3>
-            <div class="all-webworks-inner" id="all-webworks-inner">
-                <!-- <aside class="row">
-                    <h4 class="works-headline">H5</h4>
-                    <ul class="works-list" id="allworks-list">
-                        <li>
-                            <a href="http://" target="_blank" class="linkto">
-                                <div class="imgbox">
-                                    <img src="images/webbetter/1.png" class="allwork-pic">
-                                    <em class="QRcode">
-                                        <cite class="work-qr">
-                                            <img src="images/webbetter/er.png">
-                                        </cite>
-                                        <cite class="text">扫码 / 点击 查看详情</cite>
-                                    </em>
-                                </div>
-                                <p class="name">烟台工业设计博览会邀请函</p>
-                            </a>
-                        </li>
-                    </ul>
-                </aside> -->
-            </div>
-
-        </div>
-    </section>
-    <!-- 全部作品 end -->
+    
     <!-- design work -->
     <section class="design-works" id="design-works">
         <span class="icon close close-hook"></span>
@@ -684,13 +767,14 @@
     <!-- 遮罩层 -->
     <div id="cover"></div>
     <!-- 遮罩层  end-->
-    <script src="js/data.js?t=0526"></script>
+     <script src="js/fns.min.js"></script>
+    <script src="js/data.min.js?t=0526"></script>
     <script src="lib/jquery-1.11.1.min.js"></script>
     <script src="lib/idangerous.swiper.min.js"></script>
     <script src="lib/layer/layer.js"></script>
     <script src="lib/aos.js"></script>
     <script src="lib/qrcode.min.js"></script>
     <script src="js/go-top.js"></script>
-    <script src="js/index.js"></script>
+    <script src="js/index.min.js"></script>
 </body>
 </html>

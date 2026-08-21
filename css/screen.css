@@ -544,6 +544,7 @@ abbr,acronym {
     position: relative;
     cursor: pointer;
     border-radius: 5px 5px 0 0;
+    background: #f2f2f2;
 }
 .afterend-list .imgbox .link-see{
     position: absolute;
@@ -622,6 +623,10 @@ abbr,acronym {
     line-height: 22px;
     word-break: break-all;
     height: 110px;
+}
+.afterend-list .info-item p a{
+    display: inline;
+    color:#14a0e9;
 }
 .afterend-list .info-item .goto{
     color:#14a0e9;
@@ -983,6 +988,51 @@ background   : #ededed;
 }
 .a-inline-link:hover{
      color: #0d6592;
+}
+
+.afterend,.Frontend{
+    position: relative;
+}
+.afterend .roll-btn{
+    top: 130px;
+}
+.Frontend .roll-btn{
+    top: 200px;
+}
+.roll-btn{
+    position: absolute;
+    color: #E95514;
+    padding: 10px 0px;
+    border: 1px solid;
+    right: -60px;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+.roll-btn:hover{
+    opacity: 0.6;
+}
+.roll-button{
+    border: 0;
+    color: #E95514;
+    background-image: url('../img/icon-roll.svg');
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: 50% auto;
+    width: 40px;
+    background-color: transparent;
+    padding-top: 25px;
+    writing-mode: vertical-lr;
+     text-orientation: upright;
+     cursor: pointer;
+}
+.roll-btn.disabled{
+    filter: grayscale(100%);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.roll-btn.disabled .roll-button{
+    cursor: not-allowed;
 }
 
 
